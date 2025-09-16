@@ -4,7 +4,7 @@
 python build_glb_index.py --input-path /root/autodl-tmp/zyh/retriever/obj
 
 # 只处理单个类别（传子目录）
-python build_glb_index.py --input-path /root/autodl-tmp/zyh/retriever/obj/toilet
+python build_glb_index.py --input-path /root/autodl-tmp/zyh/retriever/obj/oven
 
 """
 

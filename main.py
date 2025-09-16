@@ -28,6 +28,9 @@ def main():
     input_json_path = "/root/autodl-tmp/zyh/retriever/mlayout_generated_format/generated_layouts_infinigen_train.json"
     output_base_dir = "/root/autodl-tmp/zyh/retriever/rendered_scenes_infinigenv3_test"
     
+    obj_folder="/root/autodl-tmp/zyh/retriever/obj"
+    glb_index_path="/root/autodl-tmp/zyh/retriever/glb_index.json"
+
     # False to skip saving blend files
     SAVE_BLEND_FILES = False  
     
@@ -40,7 +43,7 @@ def main():
         return False
     
     try:
-        success_count = process_scenes_batch(scenes_data, output_base_dir, SAVE_BLEND_FILES)
+        success_count = process_scenes_batch(scenes_data, output_base_dir, obj_folder, glb_index_path, SAVE_BLEND_FILES)
         
         print("\n" + "=" * 80)
         print(f"✓ BATCH PROCESSING COMPLETED!")

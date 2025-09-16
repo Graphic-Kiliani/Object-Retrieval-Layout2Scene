@@ -26,7 +26,7 @@ ROTATION_INSENSITIVE_CATEGORIES = {
     'gym_equipment'
 }
 
-# ========= 新增：按“类别”定义 Trellis → Infinigen 的“预对齐旋转” =========
+# ========= Trellis → Infinigen: Pre rotation =========
 PRE_ROTATION_BY_CATEGORY = {
     'toilet':  0
     # future objects
@@ -166,10 +166,10 @@ def apply_object_transformations(obj, location, size, rotation, category=None):
         rotated_min, rotated_max, rotated_size, rotated_center = compute_bbox([obj])
         print(f"    Rotated bbox: size={rotated_size}, center={rotated_center}")
 
-        # === 关键：JSON 的 size 是 half-extents；且 (w,h,d) 在世界坐标映射为 (X,Y,Z) = (w,d,h) ===
+        # === JSON 的 size 是 half-extents；且 (w,h,d) 在世界坐标映射为 (X,Y,Z) = (w,d,h) ===
         target_size_x = 2.0 * float(size[0])  # width  (w) -> X
-        target_size_y = 2.0 * float(size[2])  # depth  (d) -> Y  ← 与之前相反
-        target_size_z = 2.0 * float(size[1])  # height (h) -> Z  ← 与之前相反
+        target_size_y = 2.0 * float(size[2])  # depth  (d) -> Y  
+        target_size_z = 2.0 * float(size[1])  # height (h) -> Z  
         print(f"    Target FULL size (W,D,H→X,Y,Z): "
             f"[{target_size_x:.6f}, {target_size_y:.6f}, {target_size_z:.6f}]")
 
@@ -180,7 +180,7 @@ def apply_object_transformations(obj, location, size, rotation, category=None):
             'kitchen_cabinet',  'children_cabinet',
             'dining_table', 'dressing_table', 'coffee_table',
             'console_table', 'corner_side_table', 'round_end_table',
-            'table', 'shelf','rug', 'bookshelf'
+            'table', 'shelf','rug', 'bookshelf', 'kitchen_space'
         }
 
         use_anisotropic = cat_lower in ANISOTROPIC_SCALE_CATEGORIES
@@ -210,12 +210,12 @@ def apply_object_transformations(obj, location, size, rotation, category=None):
             print(f"    Scale ratios: X={scale_ratio_x:.6f}, Y={scale_ratio_y:.6f}, Z={scale_ratio_z:.6f}")
 
 
-        # ---------- Step 5: 缩放后的 bbox ----------
+        # ---------- Step 5: Scaled bbox ----------
         current_min, current_max, current_size, current_center = compute_bbox([obj])
         print(f"    Scaled bbox: size={current_size}, center={current_center}")
 
 
-        # ---------- Step 6: 目标中心（你的 [x,z,y] 映射保持不变） ----------
+        # ---------- Step 6: Target center ----------
         target_center = Vector((
             location[0] * SCENE_SCALE,  # x
             location[2] * SCENE_SCALE,  # z -> y
@@ -223,7 +223,7 @@ def apply_object_transformations(obj, location, size, rotation, category=None):
         ))
         print(f"    Target center: {target_center} (axis map [x,z,y])")
 
-        # ---------- Step 7: 平移到目标中心 ----------
+        # ---------- Step 7: Move to center ----------
         move_distance = target_center - current_center
         before_loc = tuple(obj.location)
         obj.location = obj.location + move_distance
@@ -231,7 +231,6 @@ def apply_object_transformations(obj, location, size, rotation, category=None):
         print(f"    Translation applied: Δ={move_distance}  loc(before)={before_loc} -> (after)={tuple(obj.location)}")
 
         
-        # ---------- Step 8: 校验 ----------
         final_min, final_max, final_size, final_center = compute_bbox([obj])
         alignment_error = (final_center - target_center).length
         print(f"    Final bbox: size={final_size}, center={final_center}")
@@ -280,31 +279,27 @@ def setup_topdown_camera(objects_to_render, z_margin=5.0, resolution=(1024, 1024
 def setup_render_settings():
     print("[Render Setup] Configuring render settings...")
 
-    # 引擎 & 采样
     bpy.context.scene.render.engine = 'CYCLES'
     bpy.context.scene.cycles.samples = 128
     bpy.context.scene.cycles.use_adaptive_sampling = True
 
-    # 关闭透明底（否则查看器会把透明显示成白）
     bpy.context.scene.render.film_transparent = False
 
-    # 颜色管理：用 Standard，保证白色真的就是 255 白
     vs = bpy.context.scene.view_settings
-    vs.view_transform = 'Standard'   # 默认 Filmic 会让白看起来偏灰
+    vs.view_transform = 'Standard'   
     vs.look = 'None'
     vs.exposure = 0.0
     vs.gamma = 1.0
     bpy.context.scene.display_settings.display_device = 'sRGB'
     bpy.context.scene.sequencer_colorspace_settings.name = 'sRGB'
 
-    # 世界背景：纯白
     bpy.context.scene.world.use_nodes = True
     world_nodes = bpy.context.scene.world.node_tree.nodes
     links = bpy.context.scene.world.node_tree.links
     world_nodes.clear()
     bg = world_nodes.new(type='ShaderNodeBackground')
-    bg.inputs[0].default_value = (1.0, 1.0, 1.0, 1.0)  # 纯白
-    bg.inputs[1].default_value = 1.0                   # 强度 1
+    bg.inputs[0].default_value = (1.0, 1.0, 1.0, 1.0)  
+    bg.inputs[1].default_value = 1.0                  
     out = world_nodes.new(type='ShaderNodeOutputWorld')
     links.new(bg.outputs[0], out.inputs[0])
 
@@ -362,19 +357,30 @@ def make_solid_material(mat_name: str, rgba) -> bpy.types.Material:
 
 
 def apply_color_by_category(obj: bpy.types.Object, category: str, color_map: dict):
-    """给单个物体按类别上色"""
+    """unify material slot, set material_index 0"""
     cat = (category or "").strip().lower()
-    rgba = color_map.get(cat, None)
+    rgba = color_map.get(cat)
+
     mat_name = f"CatColor_{cat}"
     mat = make_solid_material(mat_name, rgba)
-    if obj.data.materials:
-        obj.data.materials[0] = mat
+
+    me = obj.data
+    if me is None:
+        return
+    if len(me.materials) == 0:
+        me.materials.append(mat)
     else:
-        obj.data.materials.append(mat)
+        for i in range(len(me.materials)):
+            me.materials[i] = mat
+
+    if hasattr(me, "polygons"):
+        for poly in me.polygons:
+            poly.material_index = 0
+
     obj.active_material = mat
-    # 可选：把类别存为自定义属性，便于排查
-    obj["category"] = category
-    print(f"  ✓ Color applied for '{category}': {rgba[:3]}")
+
+    print(f"  ✓ Color applied for '{category}': {rgba[:3]}  "
+          f"(slots={len(me.materials)})")
 
 
 def render_topdown_scene(filepath):
@@ -399,47 +405,45 @@ def save_scene_file(filepath):
         print(f"  Error saving scene: {e}")
         return False
 
-def process_scene(scene_data, scene_index, output_base_dir, save_blend=False):
-    """处理单个场景"""
+def process_scene(scene_data, scene_index, output_base_dir, obj_folder, glb_index_path, save_blend=False):
+    """Single scene"""
     print("=" * 80)
     print(f"Processing scene {scene_index}")
     print("=" * 80)
-    
+
     clear_scene()
-    glb_index_path = "/root/autodl-tmp/zyh/retriever/glb_index.json"
     glb_index = load_glb_index(glb_index_path) or None
 
     class_names = scene_data.get('class_names', [])
     translations_raw = scene_data.get('translations', [])
     sizes_raw = scene_data.get('sizes', [])
     angles_raw = scene_data.get('angles', [])
-    
+
     translations = translations_raw[0] if translations_raw and len(translations_raw) > 0 else []
     sizes = sizes_raw[0] if sizes_raw and len(sizes_raw) > 0 else []
     angles = angles_raw[0] if angles_raw and len(angles_raw) > 0 else []
-    
+
     print(f"Number of objects: {len(class_names)}")
     print(f"Translations length: {len(translations)}")
     print(f"Sizes length: {len(sizes)}")
     print(f"Angles length: {len(angles)}")
-    
+
     min_length = min(len(class_names), len(translations), len(sizes), len(angles))
     if min_length == 0:
         print("No objects found in scene")
         return False
-    
+
     successful_imports = 0
-    obj_folder = "/root/autodl-tmp/zyh/retriever/obj"
-    
+
     color_map = load_category_colors(COLORS_JSON_PATH)
     for i in range(min_length):
         category = class_names[i]
         location = translations[i]
         size = sizes[i]
         rotation_raw = angles[i]
-        
+
         if isinstance(rotation_raw, list) and len(rotation_raw) > 0:
-            rotation = rotation_raw[0]  
+            rotation = rotation_raw[0]
         else:
             rotation = rotation_raw
 
@@ -486,7 +490,6 @@ def process_scene(scene_data, scene_index, output_base_dir, save_blend=False):
     setup_lighting()
     setup_render_settings()
 
-
     output_folder = os.path.join(output_base_dir, f"scene_{scene_index}")
     os.makedirs(output_folder, exist_ok=True)
     scene_file_path = os.path.join(output_folder, f"scene_{scene_index}.blend")
@@ -513,8 +516,9 @@ def process_scene(scene_data, scene_index, output_base_dir, save_blend=False):
     print(f"  Output folder: {output_folder}")
     return True
 
-def process_scenes_batch(scenes_data, output_base_dir, save_blend=True):
-    """批量处理多个场景"""
+
+def process_scenes_batch(scenes_data, output_base_dir, obj_folder, glb_index_path, save_blend=False):
+    """Batch scenes"""
     print("=" * 80)
     print(f"Starting batch processing of {len(scenes_data)} scenes")
     print(f"Save .blend files: {'Yes' if save_blend else 'No'}")
@@ -526,7 +530,7 @@ def process_scenes_batch(scenes_data, output_base_dir, save_blend=True):
     for i, scene_data in enumerate(scenes_data):
         try:
             print(f"\n{'='*20} Processing Scene {i+1}/{len(scenes_data)} {'='*20}")
-            if process_scene(scene_data, i, output_base_dir, save_blend):
+            if process_scene(scene_data, i, output_base_dir, obj_folder, glb_index_path, save_blend):
                 success_count += 1
                 print(f"✓ Scene {i} processed successfully")
             else:
@@ -543,7 +547,6 @@ def process_scenes_batch(scenes_data, output_base_dir, save_blend=True):
     return success_count
 
 def process_legacy_scene():
-    """保持原有的单场景处理函数以兼容性"""
     print("=" * 80)
     print("Processing 765a3932.json scene")
     print("=" * 80)

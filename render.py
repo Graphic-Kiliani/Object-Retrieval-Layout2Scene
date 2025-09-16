@@ -180,17 +180,14 @@ def setup_topdown_camera(imported_objects, floor_center, floor_size, z_margin=20
     if not imported_objects:
         raise ValueError("No objects provided for camera setup.")
 
-    # 计算导入物体的边界来确定相机高度
     min_corner, max_corner, size, center = compute_bbox(imported_objects)
     
     print(f"[Camera Setup] Imported objects bounds: min={min_corner}, max={max_corner}")
     print(f"[Camera Setup] Floor center: {floor_center}, Floor size: {floor_size}")
 
-    # 创建正交相机
     cam_data = bpy.data.cameras.new("TopDownCam")
     cam_data.type = 'ORTHO'
     
-    # 设置正交缩放，基于floor大小而不是物体边界
     ortho_scale = floor_size * safety_ratio
     # cam_data.ortho_scale = ortho_scale
     cam_data.ortho_scale = ortho_scale
@@ -198,14 +195,11 @@ def setup_topdown_camera(imported_objects, floor_center, floor_size, z_margin=20
     cam_obj = bpy.data.objects.new("TopDownCam", cam_data)
     bpy.context.collection.objects.link(cam_obj)
 
-    # 相机位置：对准floor中心的上方
     camera_height = max_corner.z + z_margin  # 在最高物体上方z_margin的距离
     cam_obj.location = (floor_center[0], floor_center[1], camera_height)
     
-    # 相机朝向：垂直向下看
     cam_obj.rotation_euler = (0, 0, 0)  
 
-    # 设置为当前场景的活动相机
     bpy.context.scene.camera = cam_obj
 
     print(f"[Camera Setup] Camera location: ({floor_center[0]:.2f}, {floor_center[1]:.2f}, {camera_height:.2f})")
