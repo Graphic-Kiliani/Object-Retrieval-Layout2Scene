@@ -25,8 +25,8 @@ def main():
     print(f"Blender version: {bpy.app.version_string}")
     print(f"Current scene: {bpy.context.scene.name}")
     
-    input_json_path = "/root/autodl-tmp/zyh/retriever/mlayout_generated_format/generated_layouts_3dfront_train.json"
-    output_base_dir = "/root/autodl-tmp/zyh/retriever/rendered_scenes_3dfront_test"
+    input_json_path = "/root/autodl-tmp/zyh/retriever/mlayout_generated_format/generated_layouts_infinigen_train.json"
+    output_base_dir = "/root/autodl-tmp/zyh/retriever/rendered_scenes_infinigenv3_test"
     
     # False to skip saving blend files
     SAVE_BLEND_FILES = False  

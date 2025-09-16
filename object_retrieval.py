@@ -32,6 +32,9 @@ PRE_ROTATION_BY_CATEGORY = {
     # future objects
 }
 
+# ====== Import category->RGB from json======
+COLORS_JSON_PATH = "/root/autodl-tmp/zyh/retriever/colors_mapping.json"
+
 def rotate_object_world_z(obj, angle_rad: float):
     """在世界坐标系下绕 Z 轴旋转物体（左乘世界矩阵），稳且不受 rotation_mode 影响。"""
     if abs(angle_rad) < 1e-8:
@@ -174,11 +177,12 @@ def apply_object_transformations(obj, location, size, rotation, category=None):
         # 逐轴缩放的类别（桌/柜/架类等）：长度、宽度、高度分别匹配
         ANISOTROPIC_SCALE_CATEGORIES = {
             'cabinet', 'large_shelf', 'cell_shelf',
-            'kitchen_cabinet',  'children_cabinet'
+            'kitchen_cabinet',  'children_cabinet',
             'dining_table', 'dressing_table', 'coffee_table',
             'console_table', 'corner_side_table', 'round_end_table',
-            'table', 'bookshelf', 'shelf', 'rug'
+            'table', 'shelf','rug', 'bookshelf'
         }
+
         use_anisotropic = cat_lower in ANISOTROPIC_SCALE_CATEGORIES
         eps = 1e-12
         
@@ -192,6 +196,7 @@ def apply_object_transformations(obj, location, size, rotation, category=None):
             bpy.context.view_layer.update()
             print(f"    Anisotropic scale applied for '{cat_lower}': "
                   f"sx={sx:.6f}, sy={sy:.6f}, sz={sz:.6f}  (scale before={before_scale})")
+
         else:
             # 等比缩放（不超尺寸，保持原比例）
             scale_ratio_x = target_size_x / max(rotated_size.x, eps)
@@ -274,20 +279,38 @@ def setup_topdown_camera(objects_to_render, z_margin=5.0, resolution=(1024, 1024
 
 def setup_render_settings():
     print("[Render Setup] Configuring render settings...")
+
+    # 引擎 & 采样
     bpy.context.scene.render.engine = 'CYCLES'
     bpy.context.scene.cycles.samples = 128
-    bpy.context.scene.view_layers[0].use_pass_z = True
+    bpy.context.scene.cycles.use_adaptive_sampling = True
+
+    # 关闭透明底（否则查看器会把透明显示成白）
+    bpy.context.scene.render.film_transparent = False
+
+    # 颜色管理：用 Standard，保证白色真的就是 255 白
+    vs = bpy.context.scene.view_settings
+    vs.view_transform = 'Standard'   # 默认 Filmic 会让白看起来偏灰
+    vs.look = 'None'
+    vs.exposure = 0.0
+    vs.gamma = 1.0
+    bpy.context.scene.display_settings.display_device = 'sRGB'
+    bpy.context.scene.sequencer_colorspace_settings.name = 'sRGB'
+
+    # 世界背景：纯白
     bpy.context.scene.world.use_nodes = True
     world_nodes = bpy.context.scene.world.node_tree.nodes
+    links = bpy.context.scene.world.node_tree.links
     world_nodes.clear()
-    background = world_nodes.new(type='ShaderNodeBackground')
-    background.inputs[0].default_value = (1.0, 1.0, 1.0, 1.0)  # 纯白色背景
-    background.inputs[1].default_value = 1.0
-    output = world_nodes.new(type='ShaderNodeOutputWorld')
-    bpy.context.scene.world.node_tree.links.new(background.outputs[0], output.inputs[0])
+    bg = world_nodes.new(type='ShaderNodeBackground')
+    bg.inputs[0].default_value = (1.0, 1.0, 1.0, 1.0)  # 纯白
+    bg.inputs[1].default_value = 1.0                   # 强度 1
+    out = world_nodes.new(type='ShaderNodeOutputWorld')
+    links.new(bg.outputs[0], out.inputs[0])
+
     print("  Render engine: Cycles")
     print("  Samples: 128")
-    print("  World lighting: Configured")
+    print("  World: pure white, film_transparent=False, view_transform=Standard")
 
 def setup_lighting():
     print("[Lighting Setup] Adding lights...]")
@@ -304,158 +327,55 @@ def setup_lighting():
     print(f"  Sun light: {sun.name} (energy: {sun.data.energy})")
     print(f"  Fill light: {area_light.name} (energy: {area_light.data.energy})")
 
-def apply_random_colors_to_objects():
-    """为场景中的所有物体应用随机纯色材质"""
-    print("[Color Setup] Applying random colors to objects...")
-    
-    # 预定义的颜色列表（深色高对比度）
-    colors = [
-        # 深红色系
-        (0.6, 0.0, 0.0, 1.0),    # 深红色
-        (0.8, 0.1, 0.1, 1.0),    # 暗红色
-        (0.4, 0.0, 0.0, 1.0),    # 极深红色
-        
-        # 深绿色系
-        (0.0, 0.5, 0.0, 1.0),    # 深绿色
-        (0.0, 0.7, 0.0, 1.0),    # 暗绿色
-        (0.0, 0.3, 0.0, 1.0),    # 极深绿色
-        
-        # 深蓝色系
-        (0.0, 0.0, 0.6, 1.0),    # 深蓝色
-        (0.0, 0.0, 0.8, 1.0),    # 暗蓝色
-        (0.0, 0.0, 0.4, 1.0),    # 极深蓝色
-        
-        # 深紫色系
-        (0.4, 0.0, 0.6, 1.0),    # 深紫色
-        (0.6, 0.0, 0.8, 1.0),    # 暗紫色
-        (0.2, 0.0, 0.4, 1.0),    # 极深紫色
-        
-        # 深橙色系
-        (0.7, 0.3, 0.0, 1.0),    # 深橙色
-        (0.8, 0.4, 0.0, 1.0),    # 暗橙色
-        (0.5, 0.2, 0.0, 1.0),    # 极深橙色
-        
-        # 深青色系
-        (0.0, 0.5, 0.5, 1.0),    # 深青色
-        (0.0, 0.7, 0.7, 1.0),    # 暗青色
-        (0.0, 0.3, 0.3, 1.0),    # 极深青色
-        
-        # 深黄色系
-        (0.6, 0.6, 0.0, 1.0),    # 深黄色
-        (0.8, 0.8, 0.0, 1.0),    # 暗黄色
-        (0.4, 0.4, 0.0, 1.0),    # 极深黄色
-        
-        # 深洋红色系
-        (0.6, 0.0, 0.6, 1.0),    # 深洋红色
-        (0.8, 0.0, 0.8, 1.0),    # 暗洋红色
-        (0.4, 0.0, 0.4, 1.0),    # 极深洋红色
-        
-        # 深棕色系
-        (0.4, 0.2, 0.0, 1.0),    # 深棕色
-        (0.6, 0.3, 0.0, 1.0),    # 暗棕色
-        (0.2, 0.1, 0.0, 1.0),    # 极深棕色
-        
-        # 深灰色系
-        (0.2, 0.2, 0.2, 1.0),    # 深灰色
-        (0.3, 0.3, 0.3, 1.0),    # 暗灰色
-        (0.1, 0.1, 0.1, 1.0),    # 极深灰色
-        
-        # 深橄榄色系
-        (0.3, 0.4, 0.0, 1.0),    # 深橄榄色
-        (0.4, 0.5, 0.0, 1.0),    # 暗橄榄色
-        (0.2, 0.3, 0.0, 1.0),    # 极深橄榄色
-        
-        # 深青绿色系
-        (0.0, 0.4, 0.3, 1.0),    # 深青绿色
-        (0.0, 0.6, 0.4, 1.0),    # 暗青绿色
-        (0.0, 0.2, 0.2, 1.0),    # 极深青绿色
-        
-        # 深粉红色系
-        (0.6, 0.2, 0.4, 1.0),    # 深粉红色
-        (0.8, 0.3, 0.5, 1.0),    # 暗粉红色
-        (0.4, 0.1, 0.2, 1.0),    # 极深粉红色
-        
-        # 深靛蓝色系
-        (0.2, 0.0, 0.6, 1.0),    # 深靛蓝色
-        (0.3, 0.0, 0.8, 1.0),    # 暗靛蓝色
-        (0.1, 0.0, 0.4, 1.0),    # 极深靛蓝色
-        
-        # 深珊瑚色系
-        (0.8, 0.3, 0.2, 1.0),    # 深珊瑚色
-        (0.9, 0.4, 0.3, 1.0),    # 暗珊瑚色
-        (0.6, 0.2, 0.1, 1.0),    # 极深珊瑚色
-        
-        # 深薄荷色系
-        (0.0, 0.6, 0.4, 1.0),    # 深薄荷色
-        (0.0, 0.8, 0.5, 1.0),    # 暗薄荷色
-        (0.0, 0.4, 0.3, 1.0),    # 极深薄荷色
-        
-        # 深金色系
-        (0.6, 0.5, 0.0, 1.0),    # 深金色
-        (0.8, 0.6, 0.0, 1.0),    # 暗金色
-        (0.4, 0.3, 0.0, 1.0),    # 极深金色
-        
-        # 深银灰色系
-        (0.4, 0.4, 0.4, 1.0),    # 深银灰色
-        (0.5, 0.5, 0.5, 1.0),    # 暗银灰色
-        (0.3, 0.3, 0.3, 1.0),    # 极深银灰色
-    ]
-    
-    # 获取所有网格物体
-    mesh_objects = [obj for obj in bpy.context.scene.objects if obj.type == 'MESH']
-    
-    if not mesh_objects:
-        print("  No mesh objects found to color")
-        return
-    
-    print(f"  Found {len(mesh_objects)} mesh objects to color")
-    
-    # 为每个物体分配随机颜色
-    import random
-    colored_count = 0
-    
-    for obj in mesh_objects:
-        try:
-            # 选择随机颜色
-            color = random.choice(colors)
-            
-            # 创建新材质
-            material_name = f"RandomColor_{obj.name}"
-            material = bpy.data.materials.new(name=material_name)
-            material.use_nodes = True
-            
-            # 清除默认节点
-            material.node_tree.nodes.clear()
-            
-            # 添加输出节点
-            output_node = material.node_tree.nodes.new(type='ShaderNodeOutputMaterial')
-            
-            # 添加原理化BSDF节点
-            bsdf_node = material.node_tree.nodes.new(type='ShaderNodeBsdfPrincipled')
-            
-            # 设置颜色
-            bsdf_node.inputs['Base Color'].default_value = color
-            
-            # 连接节点
-            material.node_tree.links.new(bsdf_node.outputs['BSDF'], output_node.inputs['Surface'])
-            
-            # 将材质分配给物体
-            if obj.data.materials:
-                obj.data.materials[0] = material
-            else:
-                obj.data.materials.append(material)
-            
-            # 确保物体使用材质
-            obj.active_material = material
-            
-            colored_count += 1
-            print(f"  ✓ {obj.name} -> {color[:3]} (RGB)")
-            
-        except Exception as e:
-            print(f"  ✗ Failed to color {obj.name}: {e}")
-    
-    print(f"  Successfully colored {colored_count}/{len(mesh_objects)} objects")
-    return colored_count
+
+def _clamp01(x: float) -> float:
+    return max(0.0, min(1.0, float(x)))
+
+def load_category_colors(json_path: str = COLORS_JSON_PATH) -> dict:
+    """读取 {category: [r,g,b]}，统一转小写键，返回 {cat: (r,g,b,1.0)}"""
+    try:
+        with open(json_path, "r") as f:
+            raw = json.load(f)
+    except Exception as e:
+        print(f"[ColorMap] Failed to load {json_path}: {e}")
+        return {}
+
+    cmap = {}
+    for k, v in raw.items():
+        if not isinstance(v, (list, tuple)) or len(v) < 3:
+            continue
+        r, g, b = _clamp01(v[0]), _clamp01(v[1]), _clamp01(v[2])
+        cmap[(k or "").strip().lower()] = (r, g, b, 1.0)
+    print(f"[ColorMap] Loaded {len(cmap)} entries from {json_path}")
+    return cmap
+
+def make_solid_material(mat_name: str, rgba) -> bpy.types.Material:
+    mat = bpy.data.materials.new(name=mat_name)
+    mat.use_nodes = True
+    nt = mat.node_tree
+    nt.nodes.clear()
+    out_node = nt.nodes.new(type='ShaderNodeOutputMaterial')
+    bsdf = nt.nodes.new(type='ShaderNodeBsdfPrincipled')
+    bsdf.inputs['Base Color'].default_value = rgba
+    nt.links.new(bsdf.outputs['BSDF'], out_node.inputs['Surface'])
+    return mat
+
+
+def apply_color_by_category(obj: bpy.types.Object, category: str, color_map: dict):
+    """给单个物体按类别上色"""
+    cat = (category or "").strip().lower()
+    rgba = color_map.get(cat, None)
+    mat_name = f"CatColor_{cat}"
+    mat = make_solid_material(mat_name, rgba)
+    if obj.data.materials:
+        obj.data.materials[0] = mat
+    else:
+        obj.data.materials.append(mat)
+    obj.active_material = mat
+    # 可选：把类别存为自定义属性，便于排查
+    obj["category"] = category
+    print(f"  ✓ Color applied for '{category}': {rgba[:3]}")
+
 
 def render_topdown_scene(filepath):
     print("[Render] Starting top-down render...")
@@ -479,7 +399,7 @@ def save_scene_file(filepath):
         print(f"  Error saving scene: {e}")
         return False
 
-def process_scene(scene_data, scene_index, output_base_dir, save_blend=True):
+def process_scene(scene_data, scene_index, output_base_dir, save_blend=False):
     """处理单个场景"""
     print("=" * 80)
     print(f"Processing scene {scene_index}")
@@ -489,13 +409,11 @@ def process_scene(scene_data, scene_index, output_base_dir, save_blend=True):
     glb_index_path = "/root/autodl-tmp/zyh/retriever/glb_index.json"
     glb_index = load_glb_index(glb_index_path) or None
 
-    # 解析新的JSON格式
     class_names = scene_data.get('class_names', [])
     translations_raw = scene_data.get('translations', [])
     sizes_raw = scene_data.get('sizes', [])
     angles_raw = scene_data.get('angles', [])
     
-    # 处理嵌套数组格式 - 取第一个元素（如果存在）
     translations = translations_raw[0] if translations_raw and len(translations_raw) > 0 else []
     sizes = sizes_raw[0] if sizes_raw and len(sizes_raw) > 0 else []
     angles = angles_raw[0] if angles_raw and len(angles_raw) > 0 else []
@@ -505,7 +423,6 @@ def process_scene(scene_data, scene_index, output_base_dir, save_blend=True):
     print(f"Sizes length: {len(sizes)}")
     print(f"Angles length: {len(angles)}")
     
-    # 确保所有数组长度一致
     min_length = min(len(class_names), len(translations), len(sizes), len(angles))
     if min_length == 0:
         print("No objects found in scene")
@@ -513,16 +430,16 @@ def process_scene(scene_data, scene_index, output_base_dir, save_blend=True):
     
     successful_imports = 0
     obj_folder = "/root/autodl-tmp/zyh/retriever/obj"
-
+    
+    color_map = load_category_colors(COLORS_JSON_PATH)
     for i in range(min_length):
         category = class_names[i]
         location = translations[i]
         size = sizes[i]
         rotation_raw = angles[i]
         
-        # 处理rotation可能是列表的情况
         if isinstance(rotation_raw, list) and len(rotation_raw) > 0:
-            rotation = rotation_raw[0]  # 取第一个元素
+            rotation = rotation_raw[0]  
         else:
             rotation = rotation_raw
 
@@ -555,6 +472,7 @@ def process_scene(scene_data, scene_index, output_base_dir, save_blend=True):
         if apply_object_transformations(obj, location, size, rotation, category):
             successful_imports += 1
             print(f"  ✓ Object {category} imported and positioned successfully")
+            apply_color_by_category(obj, category, color_map)
         else:
             print(f"  ✗ Failed to position object {category}")
 
@@ -567,17 +485,13 @@ def process_scene(scene_data, scene_index, output_base_dir, save_blend=True):
     camera = setup_topdown_camera(all_objects)
     setup_lighting()
     setup_render_settings()
-    
-    # 为所有物体应用随机纯色材质
-    apply_random_colors_to_objects()
 
-    # 设置输出路径
+
     output_folder = os.path.join(output_base_dir, f"scene_{scene_index}")
     os.makedirs(output_folder, exist_ok=True)
     scene_file_path = os.path.join(output_folder, f"scene_{scene_index}.blend")
     render_output_path = os.path.join(output_folder, f"scene_{scene_index}.png")
 
-    # 根据开关决定是否保存.blend文件
     if save_blend:
         if save_scene_file(scene_file_path):
             print("✓ Scene file saved successfully")
@@ -707,10 +621,7 @@ def process_legacy_scene():
     setup_lighting()
     setup_render_settings()
     
-    # 为所有物体应用随机纯色材质
-    apply_random_colors_to_objects()
 
-    # 使用默认输出路径
     output_folder = "/root/autodl-tmp/zyh/retriever/output_765a3932_1"
     os.makedirs(output_folder, exist_ok=True)
     scene_file_path = os.path.join(output_folder, "scene_765a3932.blend")
