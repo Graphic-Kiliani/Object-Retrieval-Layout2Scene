@@ -17,7 +17,7 @@ This pipeline is designed to be **lightweight, reproducible, and extensible**, e
 
 We use a curated dataset containing 3D objects categorized by type, designed to support layout-based retrieval tasks.
 
-- **Dataset link:** [Download Here](https://pan.baidu.com/s/1HSNx3WmHBmBf2wo5anpS9g?pwd=fx62)
+- **Dataset link:** [Download Here](https://pan.baidu.com/s/1Xxopue8EjIelQxhDkSoK6Q?pwd=p4cj)
 
 ## Test Input
 
