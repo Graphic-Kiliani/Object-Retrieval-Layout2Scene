@@ -94,7 +94,6 @@ def main():
         print(f"Successfully processed: {success_count}/{processed_total} scenes")
         print(f"Output directory: {output_base_dir}")
         print(f"Save .blend files: {'Yes' if SAVE_BLEND_FILES else 'No'}")
-        # ... 其余输出同原逻辑
         return success_count > 0
 
     except Exception as e:

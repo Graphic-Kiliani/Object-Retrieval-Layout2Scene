@@ -1,9 +1,8 @@
 """
-用法：
-# 处理全部类别（传根目录）
+# Processing the whole root dir
 python build_glb_index.py --input-path /root/autodl-tmp/zyh/retriever/obj
 
-# 只处理单个类别（传子目录）
+# Processing Single Category
 python build_glb_index.py --input-path /root/autodl-tmp/zyh/retriever/obj/oven
 
 """

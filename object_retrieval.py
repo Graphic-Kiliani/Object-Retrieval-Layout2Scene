@@ -120,9 +120,9 @@ def import_glb_object(glb_path):
 
 def apply_object_transformations(obj, location, size, rotation, category=None):
     """
-    应用物体的变换（顺序：预旋转 -> JSON旋转(可选) -> 统一缩放 -> 平移）
-    - 旋转：在世界坐标系下左乘 Rz，避免被 rotation_mode/父子关系等吞掉。
-    - 对“旋转不敏感”类别：跳过旋转（预旋转 + JSON旋转），只做缩放 + 平移。
+    Apply object transformations in the following order: pre-rotation → JSON rotation (optional) → uniform scaling → translation.
+    Rotation: Left-multiply R_z in world coordinates to avoid issues caused by rotation_mode or parent-child relationships.
+    For "rotation-insensitive" categories: Skip all rotations (both pre-rotation and JSON rotation), and only perform scaling and translation.
     """
     try:
         print(f"  - Applying transformations to {obj.name}")
@@ -142,7 +142,7 @@ def apply_object_transformations(obj, location, size, rotation, category=None):
                 return PRE_ROTATION_BY_CATEGORY[c]
             return 0.0
 
-        # ---------- Step 1: 预旋转（仅旋转敏感） ----------
+        # ---------- Step 1: Pre Rotation (For rotation sensitive objects) ----------
         if rotation_sensitive:
             rz_pre = float(get_pre_rz(cat_lower))
             if abs(rz_pre) > 1e-6:
@@ -154,26 +154,26 @@ def apply_object_transformations(obj, location, size, rotation, category=None):
         else:
             print(f"    '{cat_lower}' is rotation-insensitive: skip pre-rotation & JSON rotation")
 
-        # ---------- Step 2: JSON 旋转（叠加；仅旋转敏感） ----------
+        # ---------- Step 2: JSON rotation（For rotation sensitive objects） ----------
         if rotation_sensitive and abs(rotation) > 1e-6:
             rotate_object_world_z(obj, float(rotation))
             print(f"    JSON rotation applied: +{rotation:.6f} rad ({rotation*180/math.pi:.1f}°)")
         elif rotation_sensitive:
             print(f"    JSON rotation too small, skipped")
 
-        # ---------- Step 3: 旋转后的 bbox（用于缩放） ----------
+        # ---------- Step 3: bbox after rotation (For scaling) ----------
         rotated_min, rotated_max, rotated_size, rotated_center = compute_bbox([obj])
         print(f"    Rotated bbox: size={rotated_size}, center={rotated_center}")
 
-        # === JSON 的 size 是 half-extents；且 (w,h,d) 在世界坐标映射为 (X,Y,Z) = (w,d,h) ===
+        # === JSON's size is half-extentt; and (w,h,d) is mapped to (X,Y,Z) = (w,d,h) in world coordinate system ===
         target_size_x = 2.0 * float(size[0])  # width  (w) -> X
         target_size_y = 2.0 * float(size[2])  # depth  (d) -> Y  
         target_size_z = 2.0 * float(size[1])  # height (h) -> Z  
         print(f"    Target FULL size (W,D,H→X,Y,Z): "
             f"[{target_size_x:.6f}, {target_size_y:.6f}, {target_size_z:.6f}]")
 
-        # ---------- Step 4: 缩放（按类别决定：逐轴 or 等比） ----------
-        # 逐轴缩放的类别（桌/柜/架类等）：长度、宽度、高度分别匹配
+        # ---------- Step 4: scaling（By category：by axis or by proportion） ----------
+        # By axis scaling
         ANISOTROPIC_SCALE_CATEGORIES = {
             'cabinet', 'large_shelf', 'cell_shelf',
             'kitchen_cabinet',  'children_cabinet',
@@ -186,7 +186,7 @@ def apply_object_transformations(obj, location, size, rotation, category=None):
         eps = 1e-12
         
         if use_anisotropic:
-            # 各轴分别缩放，正好贴合目标 bbox
+            # By axis
             sx = target_size_x / max(rotated_size.x, eps)
             sy = target_size_y / max(rotated_size.y, eps)
             sz = target_size_z / max(rotated_size.z, eps)
@@ -197,7 +197,7 @@ def apply_object_transformations(obj, location, size, rotation, category=None):
                   f"sx={sx:.6f}, sy={sy:.6f}, sz={sz:.6f}  (scale before={before_scale})")
 
         else:
-            # 等比缩放（不超尺寸，保持原比例）
+            # By proportion
             scale_ratio_x = target_size_x / max(rotated_size.x, eps)
             scale_ratio_y = target_size_y / max(rotated_size.y, eps)
             scale_ratio_z = target_size_z / max(rotated_size.z, eps)
