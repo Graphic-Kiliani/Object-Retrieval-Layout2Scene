@@ -36,7 +36,6 @@ PRE_ROTATION_BY_CATEGORY = {
 COLORS_JSON_PATH = "/root/autodl-tmp/zyh/retriever/colors_mapping.json"
 
 def rotate_object_world_z(obj, angle_rad: float):
-    """在世界坐标系下绕 Z 轴旋转物体（左乘世界矩阵），稳且不受 rotation_mode 影响。"""
     if abs(angle_rad) < 1e-8:
         return
     Rz = Matrix.Rotation(angle_rad, 4, 'Z')
@@ -327,7 +326,6 @@ def _clamp01(x: float) -> float:
     return max(0.0, min(1.0, float(x)))
 
 def load_category_colors(json_path: str = COLORS_JSON_PATH) -> dict:
-    """读取 {category: [r,g,b]}，统一转小写键，返回 {cat: (r,g,b,1.0)}"""
     try:
         with open(json_path, "r") as f:
             raw = json.load(f)
@@ -476,7 +474,7 @@ def process_scene(scene_data, scene_index, output_base_dir, obj_folder, glb_inde
         if apply_object_transformations(obj, location, size, rotation, category):
             successful_imports += 1
             print(f"  ✓ Object {category} imported and positioned successfully")
-            apply_color_by_category(obj, category, color_map)
+            # apply_color_by_category(obj, category, color_map)
         else:
             print(f"  ✗ Failed to position object {category}")
 
@@ -517,176 +515,41 @@ def process_scene(scene_data, scene_index, output_base_dir, obj_folder, glb_inde
     return True
 
 
-def process_scenes_batch(scenes_data, output_base_dir, obj_folder, glb_index_path, save_blend=False):
+def process_scenes_batch(scenes_data, output_base_dir, obj_folder, glb_index_path, save_blend=False, selected_indices=None):
     """Batch scenes"""
     print("=" * 80)
-    print(f"Starting batch processing of {len(scenes_data)} scenes")
+    total = len(scenes_data)
+    if selected_indices is None:
+        indices = list(range(total))
+        print(f"Starting batch processing of {total} scenes")
+    else:
+        indices = list(selected_indices)
+        print(f"Starting batch processing of {len(indices)} selected scenes (from total {total})")
+        print(f"Selected indices: {indices}")
     print(f"Save .blend files: {'Yes' if save_blend else 'No'}")
     print("=" * 80)
-    
+
     os.makedirs(output_base_dir, exist_ok=True)
     success_count = 0
-    
-    for i, scene_data in enumerate(scenes_data):
+
+    for k, idx in enumerate(indices):
         try:
-            print(f"\n{'='*20} Processing Scene {i+1}/{len(scenes_data)} {'='*20}")
-            if process_scene(scene_data, i, output_base_dir, obj_folder, glb_index_path, save_blend):
+            print(f"\n{'='*20} Processing Scene {k+1}/{len(indices)} (scene_id={idx}) {'='*20}")
+            scene_data = scenes_data[idx]
+            if process_scene(scene_data, idx, output_base_dir, obj_folder, glb_index_path, save_blend):
                 success_count += 1
-                print(f"✓ Scene {i} processed successfully")
+                print(f"✓ Scene {idx} processed successfully")
             else:
-                print(f"✗ Scene {i} failed to process")
+                print(f"✗ Scene {idx} failed to process")
         except Exception as e:
-            print(f"✗ Scene {i} failed with error: {e}")
+            print(f"✗ Scene {idx} failed with error: {e}")
             import traceback
             traceback.print_exc()
-    
+
     print(f"\n{'='*80}")
-    print(f"Batch processing completed: {success_count}/{len(scenes_data)} scenes successful")
+    print(f"Batch processing completed: {success_count}/{len(indices)} scenes successful")
     print(f"{'='*80}")
-    
+
     return success_count
 
-def process_legacy_scene():
-    print("=" * 80)
-    print("Processing 765a3932.json scene")
-    print("=" * 80)
-    clear_scene()
-    glb_index_path = "/root/autodl-tmp/zyh/retriever/glb_index.json"
-    glb_index = load_glb_index(glb_index_path) or None
 
-    json_path = "/root/autodl-tmp/zyh/retriever/json/20c17bd9.json"
-    try:
-        with open(json_path, 'r') as f:
-            layout_data = json.load(f)
-        print(f"Loaded layout file: {json_path}")
-    except Exception as e:
-        print(f"Error loading layout file: {e}")
-        return False
-
-    if 'scenes' not in layout_data or not layout_data['scenes']:
-        print("No scenes found in layout file")
-        return False
-
-    scene = layout_data['scenes'][0]
-    scene_id = scene.get('scene_id', 'unknown')
-    objects = scene.get('objects', [])
-    print(f"Scene ID: {scene_id}")
-    print(f"Number of objects: {len(objects)}")
-
-    successful_imports = 0
-    obj_folder = "/root/autodl-tmp/zyh/retriever/obj"
-
-    for i, obj_data in enumerate(objects):
-        category = obj_data.get('category', 'unknown')
-        location = obj_data.get('location', [0, 0, 0])
-        size = obj_data.get('size', [1, 1, 1])
-        rotation = obj_data.get('rotation', 0.0)
-
-        print(f"\n[Object {i+1}/{len(objects)}] Processing {category}")
-        print(f"  Location: {location}")
-        print(f"  Size: {size}")
-        print(f"  Rotation: {math.degrees(rotation):.1f}°")
-
-        best_glb = None
-        if glb_index:
-            best_glb = find_best_matching_glb(category, size, glb_index)
-        if not best_glb:
-            print(f"  - Using random selection for {category}")
-            class_folder = os.path.join(obj_folder, category)
-            if os.path.exists(class_folder):
-                glb_files = [f for f in os.listdir(class_folder) if f.endswith('.glb')]
-                if glb_files:
-                    import random
-                    best_glb = os.path.join(class_folder, random.choice(glb_files))
-        if not best_glb:
-            print(f"  ✗ No GLB file found for {category}")
-            continue
-
-        print(f"  - Selected GLB: {os.path.basename(best_glb)}")
-        obj = import_glb_object(best_glb)
-        if not obj:
-            print(f"  ✗ Failed to import GLB file")
-            continue
-
-        if apply_object_transformations(obj, location, size, rotation, category):
-            successful_imports += 1
-            print(f"  ✓ Object {category} imported and positioned successfully")
-        else:
-            print(f"  ✗ Failed to position object {category}")
-
-    print(f"\n[Summary] Successfully imported {successful_imports}/{len(objects)} objects")
-    if successful_imports == 0:
-        print("No objects imported, cannot proceed with rendering")
-        return False
-
-    all_objects = [obj for obj in bpy.context.scene.objects if obj.type == 'MESH']
-    camera = setup_topdown_camera(all_objects)
-    setup_lighting()
-    setup_render_settings()
-    
-
-    output_folder = "/root/autodl-tmp/zyh/retriever/output_765a3932_1"
-    os.makedirs(output_folder, exist_ok=True)
-    scene_file_path = os.path.join(output_folder, "scene_765a3932.blend")
-    render_output_path = os.path.join(output_folder, "topdown_render.png")
-
-    if save_scene_file(scene_file_path):
-        print("✓ Scene file saved successfully")
-    else:
-        print("✗ Failed to save scene file")
-
-    if render_topdown_scene(render_output_path):
-        print("✓ Top-down render completed successfully")
-    else:
-        print("✗ Failed to render top-down view")
-
-    print(f"\n[Final Summary]")
-    print(f"  Objects imported: {successful_imports}/{len(objects)}")
-    print(f"  Scene file: {scene_file_path}")
-    print(f"  Render output: {render_output_path}")
-    print(f"  Output folder: {output_folder}")
-    return True
-
-def main_legacy():
-    print("Scene Processor")
-    print("=" * 80)
-    success = process_legacy_scene()
-    if success:
-        print("\n✓ Scene processing completed successfully!")
-    else:
-        print("\n✗ Scene processing failed!")
-    return success
-
-def test_rotation_logic():
-    print("Testing rotation logic...")
-    test_cases = [
-        ("chair", True),
-        ("table", True),
-        ("bag", False),
-        ("box", False),
-        ("cup", False),
-        ("vase", False),
-        ("plant", False),
-        ("cushion", False),
-        ("lighting", False),
-        ("sofa", True),
-    ]
-    print("\nRotation sensitivity test results:")
-    print("-" * 50)
-    all_passed = True
-    for category, expected_sensitive in test_cases:
-        is_sensitive = category.lower() not in ROTATION_INSENSITIVE_CATEGORIES
-        status = "✓" if is_sensitive == expected_sensitive else "✗"
-        sensitive_text = "rotation-sensitive" if is_sensitive else "rotation-insensitive"
-        print(f"{status} {category:<15} -> {sensitive_text}")
-        if is_sensitive != expected_sensitive:
-            all_passed = False
-    print("-" * 50)
-    print("✓ All test cases passed!" if all_passed else "✗ Some test cases failed!")
-    return all_passed
-
-if __name__ == "__main__":
-    if len(sys.argv) > 1 and sys.argv[1] == "--test":
-        test_rotation_logic()
-    else:
-        main_legacy()
