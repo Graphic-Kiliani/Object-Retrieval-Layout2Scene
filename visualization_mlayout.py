@@ -2,6 +2,7 @@ import cv2
 import numpy as np
 import json
 import os
+import math
 from PIL import Image
 from tqdm import tqdm
 from typing import List, Dict, Tuple, Optional
@@ -191,10 +192,13 @@ class Camera:
 
 class SceneVisualizer:
     """Scene visualizer responsible for rendering 3D scenes"""
-    def __init__(self, scene_layout: SceneLayout):
+    def __init__(self, scene_layout: SceneLayout, label_small: bool = False, small_thresh: float = 0.5, azimuth_offset_deg: float = 0.0):  
         self.layout = scene_layout
         self.camera = Camera()
-        self.scene_center = self.layout.get_scene_center() 
+        self.scene_center = self.layout.get_scene_center()
+        self.label_small = label_small    # controllable caption all or not
+        self.small_thresh = small_thresh  # controllable caption on size of bbox
+        self.azimuth_offset_deg = azimuth_offset_deg  # controllable camera view
 
     def _get_camera_pose(self, radius: float, elevation: float, azimuth: float) -> Tuple[np.ndarray, np.ndarray]:
         """Calculate camera position and pose"""
@@ -262,15 +266,30 @@ class SceneVisualizer:
         points = np.array([[x, img.shape[0] - y] for y, x in points], dtype=np.float32)
         return points, (w, h)
 
-    def transform_to_3d(self, points_2d, position, right=np.array([1, 0, 0]), up=np.array([0, 0, 1]), scale=0.005):
-        # Step 3: Map 2D points to a plane in front of bbox, position is bbox center or front center point
+    def transform_to_3d(self, points_2d, position, right=np.array([1, 0, 0]),
+                        up=np.array([0, 0, 1]), scale=0.005,
+                        azimuth_deg: float = 0.0):
+        """
+        Map 2D points to a plane in 3D space.
+        azimuth_deg: 相机的方位角（度），用于调整文字方向
+        """
         right = right / np.linalg.norm(right)
         up = up / np.linalg.norm(up)
         normal = np.cross(right, up)
-        
-        # Transform points from pixel coordinates to 3D space
-        centered = points_2d - np.mean(points_2d, axis=0)  # Center
+
+        centered = points_2d - np.mean(points_2d, axis=0)
         points_3d = position + (centered[:, 0:1] * right + centered[:, 1:2] * up) * scale
+
+        # === 新增：根据相机方位角旋转文字 ===
+        if abs(azimuth_deg) > 1e-6:
+            theta = math.radians(azimuth_deg)
+            Rz = np.array([
+                [math.cos(theta), -math.sin(theta), 0],
+                [math.sin(theta),  math.cos(theta), 0],
+                [0,               0,               1]
+            ])
+            points_3d = (Rz @ (points_3d - position).T).T + position
+
         return points_3d
 
     def project_and_draw(self, img, points_3d, rvec, tvec, color=(0, 255, 0)):
@@ -287,27 +306,27 @@ class SceneVisualizer:
 
         return img
 
-    def render_scene(self, radius: float = 10, elevation: float = -10, 
-                    azimuth: float = 0) -> np.ndarray:
-        """Render a single view of the scene"""
+    def render_scene(self, radius: float = 10, elevation: float = -10, azimuth: float = 0) -> np.ndarray:
         img = np.ones((self.camera.img_height, self.camera.img_width, 3), np.uint8) * 255
         rvec, tvec = self._get_camera_pose(radius, elevation, azimuth)
-        
+
         for obj in self.layout.objects:
             vertices = obj.get_bounding_box()
             color = obj.color if obj.color is not None else [0, 0, 255]
             self._draw_bounding_box(img, vertices, rvec, tvec, color)
-            # Draw object name
-            if max(obj.size) > 0.5:
-                text = obj.name
-                text_points, (w, h) = self.text_to_2d_points(text)
-                text_position = np.mean(vertices, axis=0)
-                text_points = self.transform_to_3d(text_points, text_position)
-                text_position = self.project_and_draw(img, text_points, rvec, tvec, color)
 
-        
+            size_max = max(obj.size)
+            is_big = size_max >= self.small_thresh
+            if is_big or (self.label_small and not is_big):
+                text_points, (w, h) = self.text_to_2d_points(obj.name)
+                text_position = np.mean(vertices, axis=0)
+                text_points = self.transform_to_3d(text_points, text_position,
+                                                azimuth_deg=azimuth)
+                self.project_and_draw(img, text_points, rvec, tvec, color)
+
         return img
-    
+
+    # control camera distance and gif render angle region/time length here 
     def generate_rotation_animation(self, output_path: str, radius: float = 10, 
                                   elevation: float = -10, start_azimuth: float = -40, 
                                   end_azimuth: float = 40, step: float = 4, 
@@ -315,53 +334,15 @@ class SceneVisualizer:
         """Generate scene rotation animation"""
         frames = []
         for azimuth in tqdm(np.arange(start_azimuth, end_azimuth, step)):
-            frame = self.render_scene(radius, elevation, azimuth)
+            frame = self.render_scene(radius, elevation, azimuth + self.azimuth_offset_deg)  
             frames.append(Image.fromarray(frame))
         for azimuth in tqdm(np.arange(end_azimuth, start_azimuth, -step)):
-            frame = self.render_scene(radius, elevation, azimuth)
+            frame = self.render_scene(radius, elevation, azimuth + self.azimuth_offset_deg) 
             frames.append(Image.fromarray(frame))
         
         os.makedirs(os.path.dirname(output_path) or ".", exist_ok=True)
         frames[0].save(output_path, format="GIF", append_images=frames[1:],
                      save_all=True, duration=duration, loop=0)
-
-# def load_scene_from_json(json_path: str) -> Dict[str, SceneLayout]:
-#     """Load scene objects from JSON file (adapted for mlayout format)"""
-#     with open(json_path, 'r') as f:
-#         data = json.load(f)
-    
-#     scenes = {}
-    
-#     # Generate random colors for each object category
-#     color_map = {}
-    
-#     for scene_data in data["scenes"]:
-#         scene_name = scene_data["scene_id"]
-#         scene_objects = []
-        
-#         for obj in scene_data["objects"]:
-#             obj_name = obj["category"]
-            
-#             # Skip structural objects
-#             if obj_name in ["wall", "floor", "ceiling", "door", "window", 
-#                            "railing", "column", "beam", "stairs", "frame"]:
-#                 continue
-            
-#             # Generate color for new categories
-#             if obj_name not in color_map:
-#                 color_map[obj_name] = (np.random.rand(3) * 255).astype(np.int32).tolist()
-
-#             scene_objects.append(SceneObject(
-#                 name=obj["category"],
-#                 location=obj["location"],
-#                 size=obj["size"],
-#                 rotation=obj["rotation"],
-#                 color=color_map[obj_name]
-#             ))
-
-#         scenes[scene_name] = SceneLayout(scene_objects)
-    
-#     return scenes
 
 def load_scene_from_json(json_path: str) -> Dict[str, SceneLayout]:
     """Load scene objects from JSON file (supports both list and {'scenes': [...]})"""
@@ -418,43 +399,44 @@ def load_scene_from_json(json_path: str) -> Dict[str, SceneLayout]:
     return scenes
 
 
-def main(input_path: str, output_path: Optional[str] = None, max_scenes: int = 5):
-    
+def main(input_path: str, output_path: Optional[str] = None, max_scenes: int = 5, scene_ids: Optional[list[int]] = None):
     scenes = load_scene_from_json(input_path)
-    
-    print(f"Loaded {len(scenes)} scenes total, will process first {min(max_scenes, len(scenes))} scenes")
+    items = list(scenes.items())
 
-    for i, (scene_name, scene_layout) in enumerate(scenes.items()):
-        if i >= max_scenes:
-            break
-        
+    if scene_ids is not None:
+        valid_ids = [i for i in scene_ids if 0 <= i < len(items)]
+        if not valid_ids:
+            raise ValueError(f"No valid scene_ids found in range 0 ~ {len(items)-1}")
+        items_to_process = [items[i] for i in valid_ids]
+        print(f"Loaded {len(scenes)} scenes total, will process scene_ids={valid_ids}")
+    else:
+        items_to_process = items[:min(max_scenes, len(items))]
+        print(f"Loaded {len(scenes)} scenes total, will process first {len(items_to_process)} scenes")
+
+    for i, (scene_name, scene_layout) in enumerate(items_to_process):
         os.makedirs(os.path.join(os.path.dirname(input_path), "vis_diningroom"), exist_ok=True)
-        output_path = os.path.join(os.path.dirname(input_path), "vis_dininingroom", f"{scene_name}.gif")
+        output_path = os.path.join(os.path.dirname(input_path), "vis_diningroom", f"{scene_name}.gif")
 
         min_bounds, max_bounds = scene_layout.get_scene_bounds()
-        print(f"\n=== Scene {i+1}/{min(max_scenes, len(scenes))}: {scene_name} ===")
+        print(f"\n=== Scene {i+1}/{len(items_to_process)}: {scene_name} ===")
         print(f"Scene bounds - Min: {min_bounds}, Max: {max_bounds}")
         print(f"Scene center: {scene_layout.get_scene_center()}")
         print(f"Scene size: {scene_layout.get_scene_size()}")
-        
-        # Normalize scene to origin
+
         scene_layout.normalize_to_origin()
         print("\nAfter normalization:")
         print(f"New scene center: {scene_layout.get_scene_center()}")
-        
-        # Optional: scale to unit cube
+
         scene_layout.scale_to_unit_cube()
         print("\nAfter scaling to unit cube:")
         print(f"Scene size: {scene_layout.get_scene_size()}")
 
-        # Count objects
         object_count = len(scene_layout)
         print(f"Number of objects in the scene: {object_count}")
-        
-        # Create a SceneVisualizer instance and generate the animation
-        visualizer = SceneVisualizer(scene_layout)
+
+        az_off = 180.0 if args.flip_bedhead else args.azimuth_offset
+        visualizer = SceneVisualizer(scene_layout, label_small=args.label_small, small_thresh=args.small_thresh, azimuth_offset_deg=az_off) 
         visualizer.generate_rotation_animation(output_path)
-        
         print(f"Animation saved to: {output_path}")
 
 def types_stastic(input_path: str, output_path: Optional[str] = None):
@@ -470,18 +452,35 @@ def types_stastic(input_path: str, output_path: Optional[str] = None):
     return types
 
 if __name__ == "__main__":
-    import sys
     import argparse
     
     parser = argparse.ArgumentParser(description='Visualize MP3D scene layout')
     parser.add_argument('input_file', nargs='?', default="mlayout/infinigen_train.json", 
                        help='Input JSON file path')
-    parser.add_argument('--max_scenes', type=int, default=1e6, 
+    parser.add_argument('--max_scenes', type=int, default=10**6, 
                        help='Maximum number of scenes to process (default: 1e6)')
-    
-    args = parser.parse_args()
-    main(args.input_file, max_scenes=args.max_scenes)
+    parser.add_argument('--scene_id', type=str, default=None,
+                       help='Comma-separated scene indices (e.g. "3,7,23,43")')
+    parser.add_argument('--label_small', action='store_true',
+                        help='Also draw captions for small objects (default: off)')
+    parser.add_argument('--small_thresh', type=float, default=0.4,
+                        help='Size threshold to distinguish big vs small objects (default: 0.5)')
+    parser.add_argument('--azimuth_offset', type=float, default=0.0,
+                    help='Global azimuth offset (in degrees), e.g., 180 to flip view')
+    parser.add_argument('--flip_bedhead', action='store_true',
+                    help='Shortcut to set azimuth offset to 180 degrees (view from bed head)')
 
-    # python visualization_mlayout.py /root/autodl-tmp/zyh/retriever/mlayout_diffusion_infinigen_280_30000_prompt_gpt/diningroom.json
-    # python visualization_mlayout.py mlayout/mp3d_train.json
-    # python visualization_mlayout.py mlayout/3dfront_train.json
+    args = parser.parse_args()
+
+    scene_ids = None
+    if args.scene_id:
+        try:
+            scene_ids = [int(x.strip()) for x in args.scene_id.split(',')]
+        except ValueError:
+            raise ValueError(f"Invalid --scene_id value: {args.scene_id}. Must be comma-separated integers.")
+
+    main(args.input_file, max_scenes=args.max_scenes, scene_ids=scene_ids)
+
+
+    # python visualization_mlayout.py /root/autodl-tmp/zyh/retriever/comparison/diffuscene_output/bedroom.json --scene_id 9 --label_small 
+    # python visualization_mlayout.py /root/autodl-tmp/zyh/retriever/comparison/diffuscene_output/bedroom.json --scene_id 9 --azimuth_offset 90
