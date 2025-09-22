@@ -266,13 +266,20 @@ class SceneVisualizer:
         points = np.array([[x, img.shape[0] - y] for y, x in points], dtype=np.float32)
         return points, (w, h)
 
+    def transform_to_3d(self, points_2d, position, right=np.array([1, 0, 0]), up=np.array([0, 0, 1]), scale=0.005):
+        """
+        Map 2D points to a plane in 3D space.
+        """
+        right = right / np.linalg.norm(right)
+        up    = up    / np.linalg.norm(up)
+        centered  = points_2d - np.mean(points_2d, axis=0)
+        points_3d = position + (centered[:, 0:1] * right + centered[:, 1:2] * up) * scale
+        return points_3d
+
     def transform_to_3d(self, points_2d, position, right=np.array([1, 0, 0]),
                         up=np.array([0, 0, 1]), scale=0.005,
                         azimuth_deg: float = 0.0):
-        """
-        Map 2D points to a plane in 3D space.
-        azimuth_deg: 相机的方位角（度），用于调整文字方向
-        """
+        
         right = right / np.linalg.norm(right)
         up = up / np.linalg.norm(up)
         normal = np.cross(right, up)
@@ -280,7 +287,6 @@ class SceneVisualizer:
         centered = points_2d - np.mean(points_2d, axis=0)
         points_3d = position + (centered[:, 0:1] * right + centered[:, 1:2] * up) * scale
 
-        # === 新增：根据相机方位角旋转文字 ===
         if abs(azimuth_deg) > 1e-6:
             theta = math.radians(azimuth_deg)
             Rz = np.array([
@@ -310,6 +316,11 @@ class SceneVisualizer:
         img = np.ones((self.camera.img_height, self.camera.img_width, 3), np.uint8) * 255
         rvec, tvec = self._get_camera_pose(radius, elevation, azimuth)
 
+        R, _ = cv2.Rodrigues(rvec)
+
+        cam_right_world = R.T[:, 0]        
+        cam_up_world    = -R.T[:, 1]       
+
         for obj in self.layout.objects:
             vertices = obj.get_bounding_box()
             color = obj.color if obj.color is not None else [0, 0, 255]
@@ -318,11 +329,14 @@ class SceneVisualizer:
             size_max = max(obj.size)
             is_big = size_max >= self.small_thresh
             if is_big or (self.label_small and not is_big):
-                text_points, (w, h) = self.text_to_2d_points(obj.name)
-                text_position = np.mean(vertices, axis=0)
-                text_points = self.transform_to_3d(text_points, text_position,
-                                                azimuth_deg=azimuth)
-                self.project_and_draw(img, text_points, rvec, tvec, color)
+                text_points_2d, _ = self.text_to_2d_points(obj.name)
+                text_pos_3d = np.mean(vertices, axis=0)
+
+                text_points_3d = self.transform_to_3d(
+                    text_points_2d, text_pos_3d,
+                    right=cam_right_world, up=cam_up_world, scale=0.005
+                )
+                self.project_and_draw(img, text_points_3d, rvec, tvec, color)
 
         return img
 
@@ -414,8 +428,8 @@ def main(input_path: str, output_path: Optional[str] = None, max_scenes: int = 5
         print(f"Loaded {len(scenes)} scenes total, will process first {len(items_to_process)} scenes")
 
     for i, (scene_name, scene_layout) in enumerate(items_to_process):
-        os.makedirs(os.path.join(os.path.dirname(input_path), "vis_diningroom"), exist_ok=True)
-        output_path = os.path.join(os.path.dirname(input_path), "vis_diningroom", f"{scene_name}.gif")
+        os.makedirs(os.path.join(os.path.dirname(input_path), "vis_liveroom"), exist_ok=True)
+        output_path = os.path.join(os.path.dirname(input_path), "vis_liveroom", f"{scene_name}.gif")
 
         min_bounds, max_bounds = scene_layout.get_scene_bounds()
         print(f"\n=== Scene {i+1}/{len(items_to_process)}: {scene_name} ===")
@@ -481,6 +495,3 @@ if __name__ == "__main__":
 
     main(args.input_file, max_scenes=args.max_scenes, scene_ids=scene_ids)
 
-
-    # python visualization_mlayout.py /root/autodl-tmp/zyh/retriever/comparison/diffuscene_output/bedroom.json --scene_id 9 --label_small 
-    # python visualization_mlayout.py /root/autodl-tmp/zyh/retriever/comparison/diffuscene_output/bedroom.json --scene_id 9 --azimuth_offset 90

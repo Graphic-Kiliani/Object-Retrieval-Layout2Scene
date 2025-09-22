@@ -13,7 +13,10 @@ from glb_indexer import load_glb_index, find_best_matching_glb
 
 
 SCENE_SCALE = 1.0
+# path to your colors_mapping.json
+COLORS_JSON_PATH = "path_to_mapping_color_json"
 
+# Objects which is robust to rotation
 ROTATION_INSENSITIVE_CATEGORIES = {
     'bag', 'box', 'balloon', 'bowl', 'bottle', 'can', 'cup', 'jar', 'plate',
     'pot', 'pan', 'spoon', 'fork', 'chopsticks', 'wineglass', 'food_bag',
@@ -33,7 +36,7 @@ PRE_ROTATION_BY_CATEGORY = {
 }
 
 # ====== Import category->RGB from json======
-COLORS_JSON_PATH = "/root/autodl-tmp/zyh/retriever/colors_mapping.json"
+
 
 def rotate_object_world_z(obj, angle_rad: float):
     if abs(angle_rad) < 1e-8:
@@ -359,6 +362,10 @@ def apply_color_by_category(obj: bpy.types.Object, category: str, color_map: dic
     cat = (category or "").strip().lower()
     rgba = color_map.get(cat)
 
+    if rgba is None:
+        print(f"  ! No color for '{category}' in color_map; skip coloring")
+        return 
+
     mat_name = f"CatColor_{cat}"
     mat = make_solid_material(mat_name, rgba)
 
@@ -377,8 +384,7 @@ def apply_color_by_category(obj: bpy.types.Object, category: str, color_map: dic
 
     obj.active_material = mat
 
-    print(f"  ✓ Color applied for '{category}': {rgba[:3]}  "
-          f"(slots={len(me.materials)})")
+    print(f"  ✓ Color applied for '{category}': {rgba[:3]}  (slots={len(me.materials)})")
 
 
 def render_topdown_scene(filepath):
@@ -403,7 +409,7 @@ def save_scene_file(filepath):
         print(f"  Error saving scene: {e}")
         return False
 
-def process_scene(scene_data, scene_index, output_base_dir, obj_folder, glb_index_path, save_blend=False):
+def process_scene(scene_data, scene_index, output_base_dir, obj_folder, glb_index_path, save_blend=False, colorize=False):
     """Single scene"""
     print("=" * 80)
     print(f"Processing scene {scene_index}")
@@ -433,7 +439,8 @@ def process_scene(scene_data, scene_index, output_base_dir, obj_folder, glb_inde
 
     successful_imports = 0
 
-    color_map = load_category_colors(COLORS_JSON_PATH)
+    color_map = load_category_colors(COLORS_JSON_PATH) if colorize else {}
+
     for i in range(min_length):
         category = class_names[i]
         location = translations[i]
@@ -474,7 +481,8 @@ def process_scene(scene_data, scene_index, output_base_dir, obj_folder, glb_inde
         if apply_object_transformations(obj, location, size, rotation, category):
             successful_imports += 1
             print(f"  ✓ Object {category} imported and positioned successfully")
-            # apply_color_by_category(obj, category, color_map)
+            if colorize:
+                apply_color_by_category(obj, category, color_map)
         else:
             print(f"  ✗ Failed to position object {category}")
 
@@ -515,7 +523,7 @@ def process_scene(scene_data, scene_index, output_base_dir, obj_folder, glb_inde
     return True
 
 
-def process_scenes_batch(scenes_data, output_base_dir, obj_folder, glb_index_path, save_blend=False, selected_indices=None):
+def process_scenes_batch(scenes_data, output_base_dir, obj_folder, glb_index_path, save_blend=False, selected_indices=None, colorize=False):
     """Batch scenes"""
     print("=" * 80)
     total = len(scenes_data)
@@ -527,6 +535,7 @@ def process_scenes_batch(scenes_data, output_base_dir, obj_folder, glb_index_pat
         print(f"Starting batch processing of {len(indices)} selected scenes (from total {total})")
         print(f"Selected indices: {indices}")
     print(f"Save .blend files: {'Yes' if save_blend else 'No'}")
+    print(f"Apply category colors: {'Yes' if colorize else 'No'}")  
     print("=" * 80)
 
     os.makedirs(output_base_dir, exist_ok=True)
@@ -536,7 +545,7 @@ def process_scenes_batch(scenes_data, output_base_dir, obj_folder, glb_index_pat
         try:
             print(f"\n{'='*20} Processing Scene {k+1}/{len(indices)} (scene_id={idx}) {'='*20}")
             scene_data = scenes_data[idx]
-            if process_scene(scene_data, idx, output_base_dir, obj_folder, glb_index_path, save_blend):
+            if process_scene(scene_data, idx, output_base_dir, obj_folder, glb_index_path, save_blend, colorize=colorize):
                 success_count += 1
                 print(f"✓ Scene {idx} processed successfully")
             else:

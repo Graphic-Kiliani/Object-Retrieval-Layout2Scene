@@ -1,11 +1,12 @@
 """
-/root/autodl-tmp/zyh/Infinigen-Dataset-Toolkit/blender-4.5.2-linux-x64/blender --background --python main.py -- \
-    --input_json /root/autodl-tmp/zyh/retriever/comparison/infinigen_output/bedroom.json \
-    --out_dir    /root/autodl-tmp/zyh/retriever/comparison/infinigen_output/bedroom \
-    --obj_folder /root/autodl-tmp/zyh/retriever/obj \
-    --glb_index  /root/autodl-tmp/zyh/retriever/glb_index.json \
+<path_to_blender> --background --python main.py -- \
+    --input_json <path_to_room_json> \
+    --out_dir    <output_dir_path> \
+    --obj_folder <retrieval_assets_dir_path> \
+    --glb_index  <glb_json_path> \
     --save_blend \
-    --scene_id 1,9,10,12,14
+    --scene_id <num>
+    --colorize
 """
 
 import bpy
@@ -33,16 +34,8 @@ def parse_args():
     parser.add_argument("--glb_index", type=str)
     parser.add_argument("--save_blend", action="store_true", help="Save .blend files per scene")
     parser.add_argument("--scene_id", type=str, default=None, help="Process specific scene(s). Accepts a single index '7' or comma list '3,12,22'")
+    parser.add_argument("--colorize", action="store_true", help="Apply solid color materials by category")
     return parser.parse_args(argv)
-
-def _parse_scene_id_list(scene_id_str: str):
-    ids = []
-    for tok in scene_id_str.split(","):
-        tok = tok.strip()
-        if tok == "":
-            continue
-        ids.append(int(tok))
-    return sorted(set(ids))
 
 def main():
     args = parse_args()
@@ -52,6 +45,7 @@ def main():
     obj_folder = args.obj_folder
     glb_index_path = args.glb_index
     SAVE_BLEND_FILES = bool(args.save_blend)
+    COLORIZE_OBJECTS = bool(args.colorize)  
 
     selected_indices = None
     if args.scene_id is not None:
@@ -77,30 +71,27 @@ def main():
             print(f"Error: scene_id out of range. Valid range: [0, {max_idx}], got {bad}")
             return False
 
-    try:
-        success_count = process_scenes_batch(
-            scenes_data,
-            output_base_dir,
-            obj_folder,
-            glb_index_path,
-            SAVE_BLEND_FILES,
-            selected_indices=selected_indices
-        )
 
-        print("\n" + "=" * 80)
-        print(f"✓ BATCH PROCESSING COMPLETED!")
-        print("=" * 80)
-        processed_total = len(selected_indices) if selected_indices else len(scenes_data)
-        print(f"Successfully processed: {success_count}/{processed_total} scenes")
-        print(f"Output directory: {output_base_dir}")
-        print(f"Save .blend files: {'Yes' if SAVE_BLEND_FILES else 'No'}")
-        return success_count > 0
+    success_count = process_scenes_batch(
+        scenes_data,
+        output_base_dir,
+        obj_folder,
+        glb_index_path,
+        SAVE_BLEND_FILES,
+        selected_indices=selected_indices,
+        colorize=COLORIZE_OBJECTS,           
+    )
 
-    except Exception as e:
-        print(f"\nUnexpected error: {e}")
-        import traceback
-        traceback.print_exc()
-        return False
+    print("\n" + "=" * 80)
+    print(f"✓ BATCH PROCESSING COMPLETED!")
+    print("=" * 80)
+    processed_total = len(selected_indices) if selected_indices else len(scenes_data)
+    print(f"Successfully processed: {success_count}/{processed_total} scenes")
+    print(f"Output directory: {output_base_dir}")
+    print(f"Save .blend files: {'Yes' if SAVE_BLEND_FILES else 'No'}")
+    print(f"Applied category colors: {'Yes' if COLORIZE_OBJECTS else 'No'}") 
+    return success_count > 0
+
 
 if __name__ == "__main__":
     main()
