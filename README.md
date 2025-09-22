@@ -13,6 +13,17 @@ Our approach follows a straightforward workflow:
 
 This pipeline is designed to be **lightweight, reproducible, and extensible**, enabling researchers to quickly test layout-based scene generation and retrieval tasks.
 
+## Installation
+Clone our repo:
+```bash
+git clone https://github.com/Graphic-Kiliani/Object-Retrieval-Layout2Scene.git
+```
+Download Blender's latest version:
+```bash
+# Blender 4.5.3 
+wget https://mirror.freedif.org/blender/release/Blender4.5/blender-4.5.3-linux-x64.tar.xz
+tar -xzvf blender-4.5.3-linux-x64.tar.xz -C <path_to_target_dir>
+```
 ## Dataset
 
 We use a curated dataset containing 3D objects categorized by type, designed to support layout-based retrieval tasks. 
@@ -34,7 +45,7 @@ Afterwards, you will obtain or see changes in glb_index.json file.
 
 We provide an example JSON file containing room layout information for testing and reproducing results.
 
-- **Test JSON link:** [Download Here](https://pan.baidu.com/s/1qW1-OXeabD8Uf3z9QCZCHA?pwd=9sx2)
+- **Test JSON link:** `assets/test.json`
 
 ## Usage
 
@@ -54,6 +65,23 @@ After downloading the dataset and the test JSON file, modify the json path and d
 Besides, you can palette your favourite color in `colors_mapping.json` when you turn on  `--colorize` to get pure colorful topdown images.
 
 Afterwards, you will obtain corresponding topdown.png and scene.blend according to your input scene info json.
+<table>
+  <tr>
+    <td align="center">
+      <img src="assets/topdown_bedroom.png" width="300"/><br/>
+      <sub>Bedroom</sub>
+    </td>
+    <td align="center">
+      <img src="assets/topdown_diningroom.png" width="300"/><br/>
+      <sub>Diningroom</sub>
+    </td>
+    <td align="center">
+      <img src="assets/topdown_livingroom.png" width="300"/><br/>
+      <sub>Livingroom</sub>
+    </td>
+  </tr>
+</table>
+
 
 ### Layout vis
 We provide tools to visualize layout in image or gif form. Before that, you only need to convert your scene info json format into ours. (Check it in Test JSON link)
@@ -61,6 +89,22 @@ see arguments'definition in visualization_mlayout.py
 ```bash
 python visualization_mlayout.py <path_to_room_json> --scene_id <num> --label_small --small_thresh <num> --flipover --azimuth_offset <num>
 ```
+<table>
+  <tr>
+    <td align="center">
+      <img src="assets/scene_bedroom.gif" width="300"/><br/>
+      <sub>Bedroom</sub>
+    </td>
+    <td align="center">
+      <img src="assets/scene_diningroom.gif" width="300"/><br/>
+      <sub>Diningroom</sub>
+    </td>
+    <td align="center">
+      <img src="assets/scene_livingroom.gif" width="300"/><br/>
+      <sub>Livingroom</sub>
+    </td>
+  </tr>
+</table>
 
 
 

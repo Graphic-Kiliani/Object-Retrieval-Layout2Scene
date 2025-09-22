@@ -13,10 +13,10 @@ from glb_indexer import load_glb_index, find_best_matching_glb
 
 
 SCENE_SCALE = 1.0
-# path to your colors_mapping.json
+# ====== Import category->RGB from json======
 COLORS_JSON_PATH = "path_to_mapping_color_json"
 
-# Objects which is robust to rotation
+# ====== Objects which is robust to rotation ======
 ROTATION_INSENSITIVE_CATEGORIES = {
     'bag', 'box', 'balloon', 'bowl', 'bottle', 'can', 'cup', 'jar', 'plate',
     'pot', 'pan', 'spoon', 'fork', 'chopsticks', 'wineglass', 'food_bag',
@@ -34,9 +34,6 @@ PRE_ROTATION_BY_CATEGORY = {
     'toilet':  0
     # future objects
 }
-
-# ====== Import category->RGB from json======
-
 
 def rotate_object_world_z(obj, angle_rad: float):
     if abs(angle_rad) < 1e-8:
