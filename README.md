@@ -32,29 +32,91 @@ tar -xzvf blender-4.5.3-linux-x64.tar.xz -C <path_to_target_dir>
 ```
 ## Dataset
 
-We use a curated dataset containing 3D objects categorized by type, designed to support layout-based retrieval tasks. Our retrieval dataset includes 95 objects which covers nearly all common indoor objects.
+We use a curated dataset containing 3D objects categorized by type, designed to support layout-based retrieval tasks. Our retrieval dataset **includes 95 objects** which covers nearly all common indoor objects.
 
 - **Dataset link:** [Download Here](https://pan.baidu.com/s/1Xxopue8EjIelQxhDkSoK6Q?pwd=p4cj)
 
-| **Category**                     | **Objects (95 in total)**                                                                                                                     |
-|-----------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------|
-| **Lighting**                      | lighting, ceiling-lamp, pendant.lamp, floor.lamp, desk.lamp, fan                                                                              |
-| **Tables**                        | table, coffee_table, console_table, corner_side_table, round_end_table, dining_table, dressing_table, side_table, nightstand, desk, tv_stand |
-| **Seating**                       | seating, chair, armchair, lounge_chair, chinese_chair, dining_chair, dressing_chair, stool, sofa, loveseat_sofa, l_shaped_sofa, multi_seat_sofa |
-| **Beds**                          | bed, kids_bed                                                                                                                                  |
-| **Shelves & Book storage**        | shelf, shelving, large_shelf, cell_shelf, bookshelf, book, book_column, book_stack, nature_shelf_trinkets                                  |
-| **Cabinets & Wardrobes**          | cabinet, kitchen_cabinet, children_cabinet, wardrobe, wine_cabinet                                                                            |
-| **Appliances & Electronics**      | appliances, microwave, oven, beverage_fridge, tv, monitor, tv_monitor                                                                         |
-| **Kitchen & Tableware**           | pan, pot, plate, bowl, cup, bottle, can, jar, wineglass, chopsticks, knife, fork, spoon, food_bag, food_box, fruit_container                 |
-| **Bathroom fixtures**             | bathtub, shower, sink, standing_sink, toilet, toilet_paper, toiletry, faucet, towel                                                            |
-| **Doors, Windows & Coverings**    | glass_panel_door, lite_door, window, blinds, curtain, vent                                                                                   |
-| **Hardware & Controls**           | hardware, handle, light_switch                                                                                                                |
-| **Decor**                         | plant, large-plant-container, plant-container, vase, wall_art, picture, mirror, statue, basket, balloon, cushion, rug, decoration             |
-| **Containers & Waste**            | bag, box, container, clutter, trashcan                                                                                                         |
-| **Architecture & Elements**       | counter, fireplace, pipe, furniture                                                                                                           |
-| **Clothes**                        | clothes                                                                                                                                      |
-| **Spaces**                        | kitchen_space                                                                                                                                 |
-| **Gym & Misc**                    | gym_equipment                                                                                                                                  |
+<div align="center">
+  <table>
+    <thead>
+      <tr>
+        <th style="text-align: center; vertical-align: middle;"><strong>Category</strong></th>
+        <th style="text-align: center; vertical-align: middle;"><strong>Objects (95 in total)</strong></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="text-align: center; vertical-align: middle;"><strong>Lighting</strong></td>
+        <td style="text-align: center; vertical-align: middle;">lighting, ceiling-lamp, pendant.lamp, floor.lamp, desk.lamp, fan</td>
+      </tr>
+      <tr>
+        <td style="text-align: center; vertical-align: middle;"><strong>Tables</strong></td>
+        <td style="text-align: center; vertical-align: middle;">table, coffee_table, console_table, corner_side_table, round_end_table, dining_table, dressing_table, side_table, nightstand, desk, tv_stand</td>
+      </tr>
+      <tr>
+        <td style="text-align: center; vertical-align: middle;"><strong>Seating</strong></td>
+        <td style="text-align: center; vertical-align: middle;">seating, chair, lounge_chair, chinese_chair, dining_chair, dressing_chair, stool, sofa, loveseat_sofa, l_shaped_sofa, multi_seat_sofa</td>
+      </tr>
+      <tr>
+        <td style="text-align: center; vertical-align: middle;"><strong>Beds</strong></td>
+        <td style="text-align: center; vertical-align: middle;">bed, kids_bed</td>
+      </tr>
+      <tr>
+        <td style="text-align: center; vertical-align: middle;"><strong>Shelves & Book storage</strong></td>
+        <td style="text-align: center; vertical-align: middle;">shelf, shelving, large_shelf, cell_shelf, bookshelf, book, book_column, book_stack, nature_shelf_trinkets</td>
+      </tr>
+      <tr>
+        <td style="text-align: center; vertical-align: middle;"><strong>Cabinets & Wardrobes</strong></td>
+        <td style="text-align: center; vertical-align: middle;">cabinet, kitchen_cabinet, children_cabinet, wardrobe, wine_cabinet</td>
+      </tr>
+      <tr>
+        <td style="text-align: center; vertical-align: middle;"><strong>Appliances & Electronics</strong></td>
+        <td style="text-align: center; vertical-align: middle;">appliances, microwave, oven, beverage_fridge, tv, monitor, tv_monitor</td>
+      </tr>
+      <tr>
+        <td style="text-align: center; vertical-align: middle;"><strong>Kitchen & Tableware</strong></td>
+        <td style="text-align: center; vertical-align: middle;">pan, pot, plate, bowl, cup, bottle, can, jar, wineglass, chopsticks, knife, fork, spoon, food_bag, food_box, fruit_container</td>
+      </tr>
+      <tr>
+        <td style="text-align: center; vertical-align: middle;"><strong>Bathroom fixtures</strong></td>
+        <td style="text-align: center; vertical-align: middle;">bathtub, shower, sink, standing_sink, toilet, toilet_paper, toiletry, faucet, towel</td>
+      </tr>
+      <tr>
+        <td style="text-align: center; vertical-align: middle;"><strong>Doors, Windows & Coverings</strong></td>
+        <td style="text-align: center; vertical-align: middle;">glass_panel_door, lite_door, window, blinds, curtain, vent</td>
+      </tr>
+      <tr>
+        <td style="text-align: center; vertical-align: middle;"><strong>Hardware & Controls</strong></td>
+        <td style="text-align: center; vertical-align: middle;">hardware, handle, light_switch</td>
+      </tr>
+      <tr>
+        <td style="text-align: center; vertical-align: middle;"><strong>Decor</strong></td>
+        <td style="text-align: center; vertical-align: middle;">plant, large-plant-container, plant-container, vase, wall_art, picture, mirror, statue, basket, balloon, cushion, rug, decoration</td>
+      </tr>
+      <tr>
+        <td style="text-align: center; vertical-align: middle;"><strong>Containers & Waste</strong></td>
+        <td style="text-align: center; vertical-align: middle;">bag, box, container, clutter, trashcan</td>
+      </tr>
+      <tr>
+        <td style="text-align: center; vertical-align: middle;"><strong>Architecture & Elements</strong></td>
+        <td style="text-align: center; vertical-align: middle;">counter, fireplace, pipe, furniture</td>
+      </tr>
+      <tr>
+        <td style="text-align: center; vertical-align: middle;"><strong>Clothes</strong></td>
+        <td style="text-align: center; vertical-align: middle;">clothes</td>
+      </tr>
+      <tr>
+        <td style="text-align: center; vertical-align: middle;"><strong>Spaces</strong></td>
+        <td style="text-align: center; vertical-align: middle;">kitchen_space</td>
+      </tr>
+      <tr>
+        <td style="text-align: center; vertical-align: middle;"><strong>Gym & Misc</strong></td>
+        <td style="text-align: center; vertical-align: middle;">gym_equipment</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+                                                                                                                         
 <p style="text-align: center; white-space: nowrap; margin-top: 5px;">Category list of retrieval objects</p>
 
 You can also add your desired object category and 3D assets according to our dataset format. However, in order to correctly integrate with our object retrieval process, you should **first uniform the orientation within specific category under your model's/platform's coordinate system**, and **index the size information** for calculating shape similarity with following code:
