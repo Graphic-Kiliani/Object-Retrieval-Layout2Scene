@@ -1,6 +1,6 @@
 # Layout2Scene Object Retrieval
 
-This repository provides a simple and scalable pipeline for **layout-to-scene object retrieval**, focusing on matching 2D room layouts with relevant 3D objects and rendering them for visualization.
+This repository provides a simple and scalable pipeline for **layout-to-scene object retrieval**, focusing on matching 3D room layouts with relevant 3D objects and rendering them for visualization.
 
 ## Method Overview
 
@@ -12,6 +12,12 @@ Our approach follows a straightforward workflow:
 4. **Rendering** – Render the composed scene using Blender with specified resolution and camera settings.
 
 This pipeline is designed to be **lightweight, reproducible, and extensible**, enabling researchers to quickly test layout-based scene generation and retrieval tasks.
+
+
+<div align="center">
+  <img src="assets/fig_object_retrieval_process.png">
+  <p style="text-align: center, margin-top: 5px">Object retrieval flowchart</p>
+</div>
 
 ## Installation
 Clone our repo:
@@ -26,9 +32,30 @@ tar -xzvf blender-4.5.3-linux-x64.tar.xz -C <path_to_target_dir>
 ```
 ## Dataset
 
-We use a curated dataset containing 3D objects categorized by type, designed to support layout-based retrieval tasks. 
+We use a curated dataset containing 3D objects categorized by type, designed to support layout-based retrieval tasks. Our retrieval dataset includes 95 objects which covers nearly all common indoor objects.
 
 - **Dataset link:** [Download Here](https://pan.baidu.com/s/1Xxopue8EjIelQxhDkSoK6Q?pwd=p4cj)
+
+| **Category**                     | **Objects (95 in total)**                                                                                                                     |
+|-----------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------|
+| **Lighting**                      | lighting, ceiling-lamp, pendant.lamp, floor.lamp, desk.lamp, fan                                                                              |
+| **Tables**                        | table, coffee_table, console_table, corner_side_table, round_end_table, dining_table, dressing_table, side_table, nightstand, desk, tv_stand |
+| **Seating**                       | seating, chair, armchair, lounge_chair, chinese_chair, dining_chair, dressing_chair, stool, sofa, loveseat_sofa, l_shaped_sofa, multi_seat_sofa |
+| **Beds**                          | bed, kids_bed                                                                                                                                  |
+| **Shelves & Book storage**        | shelf, shelving, large_shelf, cell_shelf, bookshelf, book, book_column, book_stack, nature_shelf_trinkets                                  |
+| **Cabinets & Wardrobes**          | cabinet, kitchen_cabinet, children_cabinet, wardrobe, wine_cabinet                                                                            |
+| **Appliances & Electronics**      | appliances, microwave, oven, beverage_fridge, tv, monitor, tv_monitor                                                                         |
+| **Kitchen & Tableware**           | pan, pot, plate, bowl, cup, bottle, can, jar, wineglass, chopsticks, knife, fork, spoon, food_bag, food_box, fruit_container                 |
+| **Bathroom fixtures**             | bathtub, shower, sink, standing_sink, toilet, toilet_paper, toiletry, faucet, towel                                                            |
+| **Doors, Windows & Coverings**    | glass_panel_door, lite_door, window, blinds, curtain, vent                                                                                   |
+| **Hardware & Controls**           | hardware, handle, light_switch                                                                                                                |
+| **Decor**                         | plant, large-plant-container, plant-container, vase, wall_art, picture, mirror, statue, basket, balloon, cushion, rug, decoration             |
+| **Containers & Waste**            | bag, box, container, clutter, trashcan                                                                                                         |
+| **Architecture & Elements**       | counter, fireplace, pipe, furniture                                                                                                           |
+| **Clothes**                        | clothes                                                                                                                                      |
+| **Spaces**                        | kitchen_space                                                                                                                                 |
+| **Gym & Misc**                    | gym_equipment                                                                                                                                  |
+<p style="text-align: center; white-space: nowrap; margin-top: 5px;">Category list of retrieval objects</p>
 
 You can also add your desired object category and 3D assets according to our dataset format. However, in order to correctly integrate with our object retrieval process, you should **first uniform the orientation within specific category under your model's/platform's coordinate system**, and **index the size information** for calculating shape similarity with following code:
 
@@ -50,7 +77,9 @@ We provide an example JSON file containing room layout information for testing a
 ## Usage
 
 ### Scene
-After downloading the dataset and the test JSON file, modify the json path and dataset path in main.py, you can run, see arguments'definition in main.py:
+After downloading the dataset and the test JSON file, modify the json path and dataset path in main.py, you can run:
+
+See arguments'definition in main.py:
 
 ```bash
 <path_to_blender> --background --python main.py -- \
@@ -64,6 +93,7 @@ After downloading the dataset and the test JSON file, modify the json path and d
 ```
 Besides, you can palette your favourite color in `colors_mapping.json` when you turn on  `--colorize` to get pure colorful topdown images.
 
+#### Rendering vis
 Afterwards, you will obtain corresponding topdown.png and scene.blend according to your input scene info json.
 <table>
   <tr>
@@ -82,10 +112,17 @@ Afterwards, you will obtain corresponding topdown.png and scene.blend according 
   </tr>
 </table>
 
+#### Multiple Rendering choices
+The first row displays the retrieved 3D scenes' renderings with pure color schemes. The second row shows the retrieved 3D scenes' renderings with original textures applied. The pure color renderings eliminate the influence of textures, making it easier to assess the layout's alignment and object retrieval accuracy using metrics like FID and KID. Meanwhile, the textured renderings offer a visually richer evaluation and applications for users.
+<div align="center">
+ <img src="assets/fig_object_retrieval_visualization.png">
+ <p style="text-align: center; margin-top: 5px;">Object retrieval visualization</p>
+</div>
 
 ### Layout vis
 We provide tools to visualize layout in image or gif form. Before that, you only need to convert your scene info json format into ours. (Check it in Test JSON link)
-see arguments'definition in visualization_mlayout.py
+
+See arguments'definition in visualization_mlayout.py
 ```bash
 python visualization_mlayout.py <path_to_room_json> --scene_id <num> --label_small --small_thresh <num> --flipover --azimuth_offset <num>
 ```

@@ -5,8 +5,8 @@
     --obj_folder <retrieval_assets_dir_path> \
     --glb_index  <glb_json_path> \
     --save_blend \
-    --scene_id <num>
-    --colorize
+    --scene_id <num> \
+    --colorize  
 """
 
 import bpy

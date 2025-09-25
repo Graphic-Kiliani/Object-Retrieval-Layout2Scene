@@ -14,9 +14,9 @@ from glb_indexer import load_glb_index, find_best_matching_glb
 
 SCENE_SCALE = 1.0
 # ====== Import category->RGB from json======
-COLORS_JSON_PATH = "path_to_mapping_color_json"
+COLORS_JSON_PATH = "path_to_color_mapping_json"
 
-# ====== Objects which is robust to rotation ======
+# ====== Objects which are robust to rotation ======
 ROTATION_INSENSITIVE_CATEGORIES = {
     'bag', 'box', 'balloon', 'bowl', 'bottle', 'can', 'cup', 'jar', 'plate',
     'pot', 'pan', 'spoon', 'fork', 'chopsticks', 'wineglass', 'food_bag',
@@ -27,6 +27,7 @@ ROTATION_INSENSITIVE_CATEGORIES = {
     'toiletry', 'towel', 'toilet_paper',
     'handle', 'light_switch', 'vent', 'fan', 'lighting', 'appliances','basket', 'clothes', 'wine_cabinet', 'ceiling_lamp', 'desk_lamp', 'floor_lamp', 'fruit_container', 'trashcan',
     'gym_equipment'
+    # future objects
 }
 
 # ========= Trellis → Infinigen: Pre rotation =========
@@ -180,6 +181,7 @@ def apply_object_transformations(obj, location, size, rotation, category=None):
             'dining_table', 'dressing_table', 'coffee_table',
             'console_table', 'corner_side_table', 'round_end_table',
             'table', 'shelf','rug', 'bookshelf', 'kitchen_space'
+            # future objects
         }
 
         use_anisotropic = cat_lower in ANISOTROPIC_SCALE_CATEGORIES
