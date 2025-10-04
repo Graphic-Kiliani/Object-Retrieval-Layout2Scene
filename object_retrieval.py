@@ -185,13 +185,29 @@ def apply_object_transformations(obj, location, size, rotation, category=None):
         }
 
         use_anisotropic = cat_lower in ANISOTROPIC_SCALE_CATEGORIES
+        
+        
+        ROTATION_CATEGORIES = {
+            'cabinet', 'large_shelf', 'cell_shelf',
+            'kitchen_cabinet',  'children_cabinet',
+            'dining_table', 'dressing_table', 'coffee_table',
+            'console_table', 'corner_side_table', 'round_end_table',
+            'table', 'shelf','rug', 'bookshelf', 'kitchen_space'
+        }
         eps = 1e-12
         
         if use_anisotropic:
-            # By axis
-            sx = target_size_x / max(rotated_size.x, eps)
-            sy = target_size_y / max(rotated_size.y, eps)
-            sz = target_size_z / max(rotated_size.z, eps)
+            
+            
+            if cat_lower in ROTATION_CATEGORIES: # 如果json文件里该物体的angle是1.57或者-1.57
+                sx = target_size_y / max(rotated_size.y, eps)
+                sy = target_size_x / max(rotated_size.x, eps)
+                sz = target_size_z / max(rotated_size.z, eps)
+            else: # 如果angle是0或者3.14
+                sx = target_size_x / max(rotated_size.x, eps)
+                sy = target_size_y / max(rotated_size.y, eps)
+                sz = target_size_z / max(rotated_size.z, eps)
+        
             before_scale = tuple(obj.scale)
             obj.scale = (sx, sy, sz)
             bpy.context.view_layer.update()
