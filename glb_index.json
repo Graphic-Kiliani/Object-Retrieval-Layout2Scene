@@ -2248,89 +2248,89 @@
       "path": "/root/autodl-tmp/zyh/retriever/obj/bookshelf/bookshelf.glb",
       "ratios": {
         "width_ratio": 0.47893381695682846,
-        "height_ratio": 0.14842577110247981,
+        "height_ratio": 0.14842565199903812,
         "depth_ratio": 1.0,
         "absolute_size": [
           0.4793594479560852,
-          0.14855767786502838,
+          0.14855755865573883,
           1.000888705253601
         ],
         "aspect_ratios": {
-          "width_height": 3.2267564682291665,
+          "width_height": 3.226759057524182,
           "width_depth": 0.47893381695682846,
-          "height_depth": 0.14842577110247981
+          "height_depth": 0.14842565199903812
         }
       }
     },
     "bookshelf_01.glb": {
       "path": "/root/autodl-tmp/zyh/retriever/obj/bookshelf/bookshelf_01.glb",
       "ratios": {
-        "width_ratio": 0.47898196860137854,
-        "height_ratio": 0.14840070939302588,
+        "width_ratio": 0.47898199837778155,
+        "height_ratio": 0.14840059028741376,
         "depth_ratio": 1.0,
         "absolute_size": [
-          0.4793989062309265,
-          0.14852988719940186,
+          0.4793989360332489,
+          0.1485297679901123,
           1.0008704662322998
         ],
         "aspect_ratios": {
-          "width_height": 3.227625868909009,
-          "width_depth": 0.47898196860137854,
-          "height_depth": 0.14840070939302588
+          "width_height": 3.2276286600350894,
+          "width_depth": 0.47898199837778155,
+          "height_depth": 0.14840059028741376
         }
       }
     },
     "bookshelf_02.glb": {
       "path": "/root/autodl-tmp/zyh/retriever/obj/bookshelf/bookshelf_02.glb",
       "ratios": {
-        "width_ratio": 0.4757141502653489,
-        "height_ratio": 0.1434563214784544,
+        "width_ratio": 0.47571418004369553,
+        "height_ratio": 0.14345620236506776,
         "depth_ratio": 1.0,
         "absolute_size": [
-          0.4760971665382385,
-          0.14357182383537292,
+          0.4760971963405609,
+          0.14357170462608337,
           1.000805139541626
         ],
         "aspect_ratios": {
-          "width_height": 3.3160905379606853,
-          "width_depth": 0.4757141502653489,
-          "height_depth": 0.1434563214784544
+          "width_height": 3.316093498927964,
+          "width_depth": 0.47571418004369553,
+          "height_depth": 0.14345620236506776
         }
       }
     },
     "bookshelf_03.glb": {
       "path": "/root/autodl-tmp/zyh/retriever/obj/bookshelf/bookshelf_03.glb",
       "ratios": {
-        "width_ratio": 0.47605432585754176,
-        "height_ratio": 0.1439020739548691,
+        "width_ratio": 0.47605435561469955,
+        "height_ratio": 0.14390195492623795,
         "depth_ratio": 1.0,
         "absolute_size": [
-          0.4767768681049347,
-          0.1441204845905304,
+          0.4767768979072571,
+          0.14412036538124084,
           1.0015177726745605
         ],
         "aspect_ratios": {
-          "width_height": 3.3081825214474883,
-          "width_depth": 0.47605432585754176,
-          "height_depth": 0.1439020739548691
+          "width_height": 3.3081854646013538,
+          "width_depth": 0.47605435561469955,
+          "height_depth": 0.14390195492623795
         }
       }
     },
     "bookshelf_04.glb": {
       "path": "/root/autodl-tmp/zyh/retriever/obj/bookshelf/bookshelf_04.glb",
       "ratios": {
-        "width_ratio": 0.48610596722398486,
-        "height_ratio": 0.14418471585538006,
+        "width_ratio": 0.4861059969956788,
+        "height_ratio": 0.14418459676860415,
         "depth_ratio": 1.0,
         "absolute_size": [
-          0.48660606145858765,
-          0.14433304965496063,
+          0.48660609126091003,
+          0.14433293044567108,
           1.0010287761688232
         ],
         "aspect_ratios": {
-          "width_height": 3.371411209157274,
-          "width_depth": 0.48610596722398486,
-          "height_depth": 0.14418471585538006
+          "width_height": 3.371414200199277,
+          "width_depth": 0.4861059969956788,
+          "height_depth": 0.14418459676860415
         }
       }
     },
@@ -2338,35 +2338,35 @@
       "path": "/root/autodl-tmp/zyh/retriever/obj/bookshelf/bookshelf_05.glb",
       "ratios": {
         "width_ratio": 0.5083829508396647,
-        "height_ratio": 0.14784797142069747,
+        "height_ratio": 0.1478478523243907,
         "depth_ratio": 1.0,
         "absolute_size": [
           0.508865237236023,
-          0.1479882299900055,
+          0.14798811078071594,
           1.0009486675262451
         ],
         "aspect_ratios": {
-          "width_height": 3.4385520880301734,
+          "width_height": 3.438554857896951,
           "width_depth": 0.5083829508396647,
-          "height_depth": 0.14784797142069747
+          "height_depth": 0.1478478523243907
         }
       }
     },
     "bookshelf_06.glb": {
       "path": "/root/autodl-tmp/zyh/retriever/obj/bookshelf/bookshelf_06.glb",
       "ratios": {
-        "width_ratio": 0.4764237146854812,
-        "height_ratio": 0.14632821291417344,
+        "width_ratio": 0.47642374445536007,
+        "height_ratio": 0.14632809383465809,
         "depth_ratio": 1.0,
         "absolute_size": [
-          0.47694292664527893,
-          0.14648768305778503,
+          0.4769429564476013,
+          0.14648756384849548,
           1.0010898113250732
         ],
         "aspect_ratios": {
-          "width_height": 3.2558568521910414,
-          "width_depth": 0.4764237146854812,
-          "height_depth": 0.14632821291417344
+          "width_height": 3.255859705202544,
+          "width_depth": 0.47642374445536007,
+          "height_depth": 0.14632809383465809
         }
       }
     },
@@ -2374,17 +2374,17 @@
       "path": "/root/autodl-tmp/zyh/retriever/obj/bookshelf/bookshelf_07.glb",
       "ratios": {
         "width_ratio": 0.7039646505613607,
-        "height_ratio": 0.14533995855395762,
+        "height_ratio": 0.14533977988668684,
         "depth_ratio": 1.0,
         "absolute_size": [
           0.7045425176620483,
-          0.14545926451683044,
+          0.14545908570289612,
           1.0008208751678467
         ],
         "aspect_ratios": {
-          "width_height": 4.843572666219063,
+          "width_height": 4.843578620458913,
           "width_depth": 0.7039646505613607,
-          "height_depth": 0.14533995855395762
+          "height_depth": 0.14533977988668684
         }
       }
     },
@@ -2392,35 +2392,35 @@
       "path": "/root/autodl-tmp/zyh/retriever/obj/bookshelf/bookshelf_08.glb",
       "ratios": {
         "width_ratio": 0.6722822644030355,
-        "height_ratio": 0.14650888231962866,
+        "height_ratio": 0.14650871852490882,
         "depth_ratio": 1.0,
         "absolute_size": [
           0.6727668046951294,
-          0.14661447703838348,
+          0.14661431312561035,
           1.000720739364624
         ],
         "aspect_ratios": {
-          "width_height": 4.5886792238054355,
+          "width_height": 4.588684353885307,
           "width_depth": 0.6722822644030355,
-          "height_depth": 0.14650888231962866
+          "height_depth": 0.14650871852490882
         }
       }
     },
     "bookshelf_09.glb": {
       "path": "/root/autodl-tmp/zyh/retriever/obj/bookshelf/bookshelf_09.glb",
       "ratios": {
-        "width_ratio": 0.47194659439313075,
-        "height_ratio": 0.14954961860795776,
+        "width_ratio": 0.4719466241735632,
+        "height_ratio": 0.1495495143764442,
         "depth_ratio": 1.0,
         "absolute_size": [
-          0.472293496131897,
-          0.14965954422950745,
+          0.47229352593421936,
+          0.1496594399213791,
           1.0007350444793701
         ],
         "aspect_ratios": {
-          "width_height": 3.155786011265814,
-          "width_depth": 0.47194659439313075,
-          "height_depth": 0.14954961860795776
+          "width_height": 3.155788409888012,
+          "width_depth": 0.4719466241735632,
+          "height_depth": 0.1495495143764442
         }
       }
     },
@@ -2428,17 +2428,17 @@
       "path": "/root/autodl-tmp/zyh/retriever/obj/bookshelf/bookshelf_10.glb",
       "ratios": {
         "width_ratio": 0.663447891563396,
-        "height_ratio": 0.15459730682586703,
+        "height_ratio": 0.15459714310888428,
         "depth_ratio": 1.0,
         "absolute_size": [
           0.6642413139343262,
-          0.15478219091892242,
+          0.1547820270061493,
           1.0011959075927734
         ],
         "aspect_ratios": {
-          "width_height": 4.291458274306682,
+          "width_height": 4.291462818922359,
           "width_depth": 0.663447891563396,
-          "height_depth": 0.15459730682586703
+          "height_depth": 0.15459714310888428
         }
       }
     },
@@ -2446,35 +2446,35 @@
       "path": "/root/autodl-tmp/zyh/retriever/obj/bookshelf/bookshelf_11.glb",
       "ratios": {
         "width_ratio": 0.48566499270285807,
-        "height_ratio": 0.1507305836117649,
+        "height_ratio": 0.15073046451364258,
         "depth_ratio": 1.0,
         "absolute_size": [
           0.4861183166503906,
-          0.15087127685546875,
+          0.1508711576461792,
           1.0009334087371826
         ],
         "aspect_ratios": {
-          "width_height": 3.222073324905183,
+          "width_height": 3.2220758707931973,
           "width_depth": 0.48566499270285807,
-          "height_depth": 0.1507305836117649
+          "height_depth": 0.15073046451364258
         }
       }
     },
     "bookshelf_12.glb": {
       "path": "/root/autodl-tmp/zyh/retriever/obj/bookshelf/bookshelf_12.glb",
       "ratios": {
-        "width_ratio": 0.4728980421940044,
-        "height_ratio": 0.13800193762807736,
+        "width_ratio": 0.4728980719725142,
+        "height_ratio": 0.13800181851403806,
         "depth_ratio": 1.0,
         "absolute_size": [
-          0.47327619791030884,
-          0.13811229169368744,
+          0.4732762277126312,
+          0.1381121724843979,
           1.0007996559143066
         ],
         "aspect_ratios": {
-          "width_height": 3.426749292959132,
-          "width_depth": 0.4728980421940044,
-          "height_depth": 0.13800193762807736
+          "width_height": 3.4267524664858615,
+          "width_depth": 0.4728980719725142,
+          "height_depth": 0.13800181851403806
         }
       }
     },
@@ -2482,17 +2482,17 @@
       "path": "/root/autodl-tmp/zyh/retriever/obj/bookshelf/bookshelf_13.glb",
       "ratios": {
         "width_ratio": 0.4807415991033582,
-        "height_ratio": 0.14813601719357394,
+        "height_ratio": 0.14813589811130762,
         "depth_ratio": 1.0,
         "absolute_size": [
           0.4812543988227844,
-          0.14829403162002563,
+          0.14829391241073608,
           1.0010666847229004
         ],
         "aspect_ratios": {
-          "width_height": 3.245271529577835,
+          "width_height": 3.245274138359997,
           "width_depth": 0.4807415991033582,
-          "height_depth": 0.14813601719357394
+          "height_depth": 0.14813589811130762
         }
       }
     },
@@ -2500,71 +2500,71 @@
       "path": "/root/autodl-tmp/zyh/retriever/obj/bookshelf/bookshelf_14.glb",
       "ratios": {
         "width_ratio": 0.5355553858960462,
-        "height_ratio": 0.15364223565761434,
+        "height_ratio": 0.15364211655187454,
         "depth_ratio": 1.0,
         "absolute_size": [
           0.5360209941864014,
-          0.15377581119537354,
+          0.15377569198608398,
           1.0008693933486938
         ],
         "aspect_ratios": {
-          "width_height": 3.4857302329908175,
+          "width_height": 3.4857329351826873,
           "width_depth": 0.5355553858960462,
-          "height_depth": 0.15364223565761434
+          "height_depth": 0.15364211655187454
         }
       }
     },
     "bookshelf_15.glb": {
       "path": "/root/autodl-tmp/zyh/retriever/obj/bookshelf/bookshelf_15.glb",
       "ratios": {
-        "width_ratio": 0.8968368061247441,
-        "height_ratio": 0.33078638997114135,
+        "width_ratio": 0.8968368656909875,
+        "height_ratio": 0.3307861814892895,
         "depth_ratio": 1.0,
         "absolute_size": [
-          0.8974149823188782,
-          0.3309996426105499,
+          0.897415041923523,
+          0.3309994339942932,
           1.0006446838378906
         ],
         "aspect_ratios": {
-          "width_height": 2.7112264389202543,
-          "width_depth": 0.8968368061247441,
-          "height_depth": 0.33078638997114135
+          "width_height": 2.7112283277771265,
+          "width_depth": 0.8968368656909875,
+          "height_depth": 0.3307861814892895
         }
       }
     },
     "bookshelf_16.glb": {
       "path": "/root/autodl-tmp/zyh/retriever/obj/bookshelf/bookshelf_16.glb",
       "ratios": {
-        "width_ratio": 0.4745739270763239,
-        "height_ratio": 0.14734977282065634,
+        "width_ratio": 0.47457395685081194,
+        "height_ratio": 0.14734965372270423,
         "depth_ratio": 1.0,
         "absolute_size": [
-          0.47501757740974426,
-          0.14748752117156982,
+          0.47501760721206665,
+          0.14748740196228027,
           1.0009348392486572
         ],
         "aspect_ratios": {
-          "width_height": 3.2207306329134386,
-          "width_depth": 0.4745739270763239,
-          "height_depth": 0.14734977282065634
+          "width_height": 3.2207334381925845,
+          "width_depth": 0.47457395685081194,
+          "height_depth": 0.14734965372270423
         }
       }
     },
     "bookshelf_17.glb": {
       "path": "/root/autodl-tmp/zyh/retriever/obj/bookshelf/bookshelf_17.glb",
       "ratios": {
-        "width_ratio": 0.47642551122225407,
-        "height_ratio": 0.15683905397794146,
+        "width_ratio": 0.4764255410040417,
+        "height_ratio": 0.15683893485079087,
         "depth_ratio": 1.0,
         "absolute_size": [
-          0.47675400972366333,
-          0.15694719552993774,
+          0.4767540395259857,
+          0.1569470763206482,
           1.0006895065307617
         ],
         "aspect_ratios": {
-          "width_height": 3.0376714162612886,
-          "width_depth": 0.47642551122225407,
-          "height_depth": 0.15683905397794146
+          "width_height": 3.0376739134149977,
+          "width_depth": 0.4764255410040417,
+          "height_depth": 0.15683893485079087
         }
       }
     },
@@ -2572,17 +2572,17 @@
       "path": "/root/autodl-tmp/zyh/retriever/obj/bookshelf/bookshelf_18.glb",
       "ratios": {
         "width_ratio": 0.6991517158059346,
-        "height_ratio": 0.15217334879521946,
+        "height_ratio": 0.15217316917293638,
         "depth_ratio": 1.0,
         "absolute_size": [
           0.6960053443908691,
-          0.1514885276556015,
+          0.15148834884166718,
           0.9954997301101685
         ],
         "aspect_ratios": {
-          "width_height": 4.594442596822832,
+          "width_height": 4.594448020014537,
           "width_depth": 0.6991517158059346,
-          "height_depth": 0.15217334879521946
+          "height_depth": 0.15217316917293638
         }
       }
     },
@@ -2590,17 +2590,17 @@
       "path": "/root/autodl-tmp/zyh/retriever/obj/bookshelf/bookshelf_19.glb",
       "ratios": {
         "width_ratio": 0.7295389218987967,
-        "height_ratio": 0.15573255182078838,
+        "height_ratio": 0.15573237306677534,
         "depth_ratio": 1.0,
         "absolute_size": [
           0.7297834753990173,
-          0.1557847559452057,
+          0.15578457713127136,
           1.0003352165222168
         ],
         "aspect_ratios": {
-          "width_height": 4.684562818557835,
+          "width_height": 4.684568195631251,
           "width_depth": 0.7295389218987967,
-          "height_depth": 0.15573255182078838
+          "height_depth": 0.15573237306677534
         }
       }
     },
@@ -2608,17 +2608,17 @@
       "path": "/root/autodl-tmp/zyh/retriever/obj/bookshelf/bookshelf_20.glb",
       "ratios": {
         "width_ratio": 0.725795022145784,
-        "height_ratio": 0.15540208325366045,
+        "height_ratio": 0.15540190454813893,
         "depth_ratio": 1.0,
         "absolute_size": [
           0.7262353301048279,
-          0.15549635887145996,
+          0.15549618005752563,
           1.000606656074524
         ],
         "aspect_ratios": {
-          "width_height": 4.670433027342882,
+          "width_height": 4.670438398140443,
           "width_depth": 0.725795022145784,
-          "height_depth": 0.15540208325366045
+          "height_depth": 0.15540190454813893
         }
       }
     }
@@ -4833,18 +4833,18 @@
     "cell_shelf_10.glb": {
       "path": "/root/autodl-tmp/zyh/retriever/obj/cell_shelf/cell_shelf_10.glb",
       "ratios": {
-        "width_ratio": 0.9219483769656,
-        "height_ratio": 0.15436559125852573,
+        "width_ratio": 0.9219485508865227,
+        "height_ratio": 0.15436562386869876,
         "depth_ratio": 1.0,
         "absolute_size": [
-          5.055392265319824,
-          0.8464450240135193,
+          5.055393218994141,
+          0.8464452028274536,
           5.483378887176514
         ],
         "aspect_ratios": {
-          "width_height": 5.97249924318662,
-          "width_depth": 0.9219483769656,
-          "height_depth": 0.15436559125852573
+          "width_height": 5.972499108161021,
+          "width_depth": 0.9219485508865227,
+          "height_depth": 0.15436562386869876
         }
       }
     }
@@ -12794,381 +12794,57 @@
     }
   },
   "kitchen_cabinet": {
-    "kitchen_cabinet.glb": {
-      "path": "/root/autodl-tmp/zyh/retriever/obj/kitchen_cabinet/kitchen_cabinet.glb",
-      "ratios": {
-        "width_ratio": 0.8928500675285687,
-        "height_ratio": 0.7009351135222863,
-        "depth_ratio": 1.0,
-        "absolute_size": [
-          0.8939995765686035,
-          0.7018375396728516,
-          1.0012874603271484
-        ],
-        "aspect_ratios": {
-          "width_height": 1.2737984590925768,
-          "width_depth": 0.8928500675285687,
-          "height_depth": 0.7009351135222863
-        }
-      }
-    },
     "kitchen_cabinet_01.glb": {
       "path": "/root/autodl-tmp/zyh/retriever/obj/kitchen_cabinet/kitchen_cabinet_01.glb",
       "ratios": {
-        "width_ratio": 0.8928300158054618,
-        "height_ratio": 0.7009259219574963,
-        "depth_ratio": 1.0,
+        "width_ratio": 1.0,
+        "height_ratio": 0.5937429674015748,
+        "depth_ratio": 0.3816469042356257,
         "absolute_size": [
-          0.8940029144287109,
-          0.701846718788147,
-          1.0013136863708496
+          7.784728050231934,
+          4.622127532958984,
+          2.971017360687256
         ],
         "aspect_ratios": {
-          "width_height": 1.273786555520774,
-          "width_depth": 0.8928300158054618,
-          "height_depth": 0.7009259219574963
+          "width_height": 1.6842304749753025,
+          "width_depth": 2.620223009545515,
+          "height_depth": 1.555738984941439
         }
       }
     },
     "kitchen_cabinet_02.glb": {
       "path": "/root/autodl-tmp/zyh/retriever/obj/kitchen_cabinet/kitchen_cabinet_02.glb",
       "ratios": {
-        "width_ratio": 0.8928860867745446,
-        "height_ratio": 0.695440452107391,
-        "depth_ratio": 1.0,
+        "width_ratio": 1.0,
+        "height_ratio": 0.2698075782154072,
+        "depth_ratio": 0.39040992705131844,
         "absolute_size": [
-          0.8941499590873718,
-          0.6964248418807983,
-          1.001415491104126
+          2.07161545753479,
+          0.5589375495910645,
+          0.808779239654541
         ],
         "aspect_ratios": {
-          "width_height": 1.2839145092420705,
-          "width_depth": 0.8928860867745446,
-          "height_depth": 0.695440452107391
+          "width_height": 3.7063451168210944,
+          "width_depth": 2.561410278557165,
+          "height_depth": 0.6910879040735602
         }
       }
     },
     "kitchen_cabinet_03.glb": {
       "path": "/root/autodl-tmp/zyh/retriever/obj/kitchen_cabinet/kitchen_cabinet_03.glb",
       "ratios": {
-        "width_ratio": 0.8940714301275694,
-        "height_ratio": 0.6596939654407832,
-        "depth_ratio": 1.0,
+        "width_ratio": 0.4832479341718535,
+        "height_ratio": 1.0,
+        "depth_ratio": 0.46841552770116834,
         "absolute_size": [
-          0.8952750563621521,
-          0.6605820655822754,
-          1.001346230506897
+          898.5621337890625,
+          1859.422607421875,
+          870.982421875
         ],
         "aspect_ratios": {
-          "width_height": 1.3552821110470274,
-          "width_depth": 0.8940714301275694,
-          "height_depth": 0.6596939654407832
-        }
-      }
-    },
-    "kitchen_cabinet_04.glb": {
-      "path": "/root/autodl-tmp/zyh/retriever/obj/kitchen_cabinet/kitchen_cabinet_04.glb",
-      "ratios": {
-        "width_ratio": 0.9281421173293677,
-        "height_ratio": 0.7310115033811236,
-        "depth_ratio": 1.0,
-        "absolute_size": [
-          0.9292736649513245,
-          0.7319027185440063,
-          1.0012191534042358
-        ],
-        "aspect_ratios": {
-          "width_height": 1.2696682788662863,
-          "width_depth": 0.9281421173293677,
-          "height_depth": 0.7310115033811236
-        }
-      }
-    },
-    "kitchen_cabinet_05.glb": {
-      "path": "/root/autodl-tmp/zyh/retriever/obj/kitchen_cabinet/kitchen_cabinet_05.glb",
-      "ratios": {
-        "width_ratio": 0.897973513742894,
-        "height_ratio": 0.6952992147428299,
-        "depth_ratio": 1.0,
-        "absolute_size": [
-          0.8985440731048584,
-          0.6957409977912903,
-          1.0006353855133057
-        ],
-        "aspect_ratios": {
-          "width_height": 1.2914922017782333,
-          "width_depth": 0.897973513742894,
-          "height_depth": 0.6952992147428299
-        }
-      }
-    },
-    "kitchen_cabinet_06.glb": {
-      "path": "/root/autodl-tmp/zyh/retriever/obj/kitchen_cabinet/kitchen_cabinet_06.glb",
-      "ratios": {
-        "width_ratio": 0.9309837201040786,
-        "height_ratio": 0.6837440808170854,
-        "depth_ratio": 1.0,
-        "absolute_size": [
-          0.9322267174720764,
-          0.6846569776535034,
-          1.0013351440429688
-        ],
-        "aspect_ratios": {
-          "width_height": 1.3615967526790693,
-          "width_depth": 0.9309837201040786,
-          "height_depth": 0.6837440808170854
-        }
-      }
-    },
-    "kitchen_cabinet_07.glb": {
-      "path": "/root/autodl-tmp/zyh/retriever/obj/kitchen_cabinet/kitchen_cabinet_07.glb",
-      "ratios": {
-        "width_ratio": 0.9300022250087411,
-        "height_ratio": 0.6925453397614538,
-        "depth_ratio": 1.0,
-        "absolute_size": [
-          0.9312615394592285,
-          0.6934831142425537,
-          1.0013540983200073
-        ],
-        "aspect_ratios": {
-          "width_height": 1.3428755802891965,
-          "width_depth": 0.9300022250087411,
-          "height_depth": 0.6925453397614538
-        }
-      }
-    },
-    "kitchen_cabinet_08.glb": {
-      "path": "/root/autodl-tmp/zyh/retriever/obj/kitchen_cabinet/kitchen_cabinet_08.glb",
-      "ratios": {
-        "width_ratio": 0.930822979499039,
-        "height_ratio": 0.7099885715483231,
-        "depth_ratio": 1.0,
-        "absolute_size": [
-          0.9319026470184326,
-          0.7108120918273926,
-          1.001159906387329
-        ],
-        "aspect_ratios": {
-          "width_height": 1.3110393840130785,
-          "width_depth": 0.930822979499039,
-          "height_depth": 0.7099885715483231
-        }
-      }
-    },
-    "kitchen_cabinet_09.glb": {
-      "path": "/root/autodl-tmp/zyh/retriever/obj/kitchen_cabinet/kitchen_cabinet_09.glb",
-      "ratios": {
-        "width_ratio": 1.0,
-        "height_ratio": 0.3691383857255158,
-        "depth_ratio": 0.8581351812222401,
-        "absolute_size": [
-          1.0002484321594238,
-          0.36923009157180786,
-          0.8583483695983887
-        ],
-        "aspect_ratios": {
-          "width_height": 2.709011142351315,
-          "width_depth": 1.1653175652065706,
-          "height_depth": 0.430163444877942
-        }
-      }
-    },
-    "kitchen_cabinet_10.glb": {
-      "path": "/root/autodl-tmp/zyh/retriever/obj/kitchen_cabinet/kitchen_cabinet_10.glb",
-      "ratios": {
-        "width_ratio": 0.8831285379726617,
-        "height_ratio": 0.6396519979637191,
-        "depth_ratio": 1.0,
-        "absolute_size": [
-          0.8838749527931213,
-          0.6401926279067993,
-          1.000845193862915
-        ],
-        "aspect_ratios": {
-          "width_height": 1.3806390674679838,
-          "width_depth": 0.8831285379726617,
-          "height_depth": 0.6396519979637191
-        }
-      }
-    },
-    "kitchen_cabinet_11.glb": {
-      "path": "/root/autodl-tmp/zyh/retriever/obj/kitchen_cabinet/kitchen_cabinet_11.glb",
-      "ratios": {
-        "width_ratio": 0.9092470986325587,
-        "height_ratio": 0.36849629336211337,
-        "depth_ratio": 1.0,
-        "absolute_size": [
-          0.9101088047027588,
-          0.36884552240371704,
-          1.0009477138519287
-        ],
-        "aspect_ratios": {
-          "width_height": 2.467452495482936,
-          "width_depth": 0.9092470986325587,
-          "height_depth": 0.36849629336211337
-        }
-      }
-    },
-    "kitchen_cabinet_12.glb": {
-      "path": "/root/autodl-tmp/zyh/retriever/obj/kitchen_cabinet/kitchen_cabinet_12.glb",
-      "ratios": {
-        "width_ratio": 0.8976077436461518,
-        "height_ratio": 0.6711309741913812,
-        "depth_ratio": 1.0,
-        "absolute_size": [
-          0.8979834318161011,
-          0.6714118719100952,
-          1.0004185438156128
-        ],
-        "aspect_ratios": {
-          "width_height": 1.3374553971788343,
-          "width_depth": 0.8976077436461518,
-          "height_depth": 0.6711309741913812
-        }
-      }
-    },
-    "kitchen_cabinet_13.glb": {
-      "path": "/root/autodl-tmp/zyh/retriever/obj/kitchen_cabinet/kitchen_cabinet_13.glb",
-      "ratios": {
-        "width_ratio": 0.9055074307550829,
-        "height_ratio": 0.38147969466958276,
-        "depth_ratio": 1.0,
-        "absolute_size": [
-          0.9061801433563232,
-          0.3817631006240845,
-          1.0007429122924805
-        ],
-        "aspect_ratios": {
-          "width_height": 2.373671373359426,
-          "width_depth": 0.9055074307550829,
-          "height_depth": 0.38147969466958276
-        }
-      }
-    },
-    "kitchen_cabinet_14.glb": {
-      "path": "/root/autodl-tmp/zyh/retriever/obj/kitchen_cabinet/kitchen_cabinet_14.glb",
-      "ratios": {
-        "width_ratio": 0.9287016953311393,
-        "height_ratio": 0.724126635864121,
-        "depth_ratio": 1.0,
-        "absolute_size": [
-          0.9294547438621521,
-          0.7247138023376465,
-          1.0008108615875244
-        ],
-        "aspect_ratios": {
-          "width_height": 1.2825128221155586,
-          "width_depth": 0.9287016953311393,
-          "height_depth": 0.724126635864121
-        }
-      }
-    },
-    "kitchen_cabinet_15.glb": {
-      "path": "/root/autodl-tmp/zyh/retriever/obj/kitchen_cabinet/kitchen_cabinet_15.glb",
-      "ratios": {
-        "width_ratio": 1.0,
-        "height_ratio": 0.3866745560973796,
-        "depth_ratio": 0.8668380319973574,
-        "absolute_size": [
-          1.000382661819458,
-          0.38682252168655396,
-          0.8671697378158569
-        ],
-        "aspect_ratios": {
-          "width_height": 2.5861541294384036,
-          "width_depth": 1.153618049840075,
-          "height_depth": 0.44607474732783575
-        }
-      }
-    },
-    "kitchen_cabinet_16.glb": {
-      "path": "/root/autodl-tmp/zyh/retriever/obj/kitchen_cabinet/kitchen_cabinet_16.glb",
-      "ratios": {
-        "width_ratio": 0.9325852125826938,
-        "height_ratio": 0.7091196604352501,
-        "depth_ratio": 1.0,
-        "absolute_size": [
-          0.9339486360549927,
-          0.7101563811302185,
-          1.0014619827270508
-        ],
-        "aspect_ratios": {
-          "width_height": 1.3151309498460146,
-          "width_depth": 0.9325852125826938,
-          "height_depth": 0.7091196604352501
-        }
-      }
-    },
-    "kitchen_cabinet_17.glb": {
-      "path": "/root/autodl-tmp/zyh/retriever/obj/kitchen_cabinet/kitchen_cabinet_17.glb",
-      "ratios": {
-        "width_ratio": 1.0,
-        "height_ratio": 0.3725651008242096,
-        "depth_ratio": 0.8565550646857134,
-        "absolute_size": [
-          0.9993677139282227,
-          0.3723295331001282,
-          0.8560134768486023
-        ],
-        "aspect_ratios": {
-          "width_height": 2.6840946663757377,
-          "width_depth": 1.1674672665287658,
-          "height_depth": 0.4349575598632541
-        }
-      }
-    },
-    "kitchen_cabinet_18.glb": {
-      "path": "/root/autodl-tmp/zyh/retriever/obj/kitchen_cabinet/kitchen_cabinet_18.glb",
-      "ratios": {
-        "width_ratio": 0.7218498028389005,
-        "height_ratio": 0.1698471772027845,
-        "depth_ratio": 1.0,
-        "absolute_size": [
-          0.7219339609146118,
-          0.16986697912216187,
-          1.0001165866851807
-        ],
-        "aspect_ratios": {
-          "width_height": 4.249995877041084,
-          "width_depth": 0.7218498028389005,
-          "height_depth": 0.1698471772027845
-        }
-      }
-    },
-    "kitchen_cabinet_19.glb": {
-      "path": "/root/autodl-tmp/zyh/retriever/obj/kitchen_cabinet/kitchen_cabinet_19.glb",
-      "ratios": {
-        "width_ratio": 0.9249072543661722,
-        "height_ratio": 0.6716412331642793,
-        "depth_ratio": 1.0,
-        "absolute_size": [
-          0.926236629486084,
-          0.6726065874099731,
-          1.0014373064041138
-        ],
-        "aspect_ratios": {
-          "width_height": 1.3770852781159517,
-          "width_depth": 0.9249072543661722,
-          "height_depth": 0.6716412331642793
-        }
-      }
-    },
-    "kitchen_cabinet_20.glb": {
-      "path": "/root/autodl-tmp/zyh/retriever/obj/kitchen_cabinet/kitchen_cabinet_20.glb",
-      "ratios": {
-        "width_ratio": 0.9329626490591636,
-        "height_ratio": 0.6978361234063379,
-        "depth_ratio": 1.0,
-        "absolute_size": [
-          0.934185266494751,
-          0.6987506151199341,
-          1.0013104677200317
-        ],
-        "aspect_ratios": {
-          "width_height": 1.3369365926560317,
-          "width_depth": 0.9329626490591636,
-          "height_depth": 0.6978361234063379
+          "width_height": 0.4832479341718535,
+          "width_depth": 1.0316650614540424,
+          "height_depth": 2.134856640871143
         }
       }
     }
@@ -13189,6 +12865,60 @@
           "width_height": 0.5171835091278401,
           "width_depth": 0.36980908465865714,
           "height_depth": 0.7150442311710403
+        }
+      }
+    },
+    "kitchen_space_03.glb": {
+      "path": "/root/autodl-tmp/zyh/retriever/obj/kitchen_space/kitchen_space_03.glb",
+      "ratios": {
+        "width_ratio": 1.0,
+        "height_ratio": 0.6148887387558295,
+        "depth_ratio": 0.6315945620755284,
+        "absolute_size": [
+          0.3000529408454895,
+          0.18449917435646057,
+          0.18951180577278137
+        ],
+        "aspect_ratios": {
+          "width_height": 1.626310480207212,
+          "width_depth": 1.5832941890978731,
+          "height_depth": 0.973549767013825
+        }
+      }
+    },
+    "kichen_space_02.glb": {
+      "path": "/root/autodl-tmp/zyh/retriever/obj/kitchen_space/kichen_space_02.glb",
+      "ratios": {
+        "width_ratio": 0.19627758627836048,
+        "height_ratio": 1.0,
+        "depth_ratio": 0.7640457332601214,
+        "absolute_size": [
+          0.5295035243034363,
+          2.697727918624878,
+          2.061187505722046
+        ],
+        "aspect_ratios": {
+          "width_height": 0.19627758627836048,
+          "width_depth": 0.256892457786342,
+          "height_depth": 1.308822177087595
+        }
+      }
+    },
+    "kitchen_cabinet_04.glb": {
+      "path": "/root/autodl-tmp/zyh/retriever/obj/kitchen_space/kitchen_cabinet_04.glb",
+      "ratios": {
+        "width_ratio": 1.0,
+        "height_ratio": 0.6038467040549466,
+        "depth_ratio": 0.5722626305370361,
+        "absolute_size": [
+          11.133089065551758,
+          6.722679138183594,
+          6.371050834655762
+        ],
+        "aspect_ratios": {
+          "width_height": 1.656049446465151,
+          "width_depth": 1.7474494168203096,
+          "height_depth": 1.0551915708496824
         }
       }
     }

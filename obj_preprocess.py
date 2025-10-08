@@ -1,4 +1,4 @@
-# /root/autodl-tmp/zyh/Infinigen-Dataset-Toolkit/blender-4.5.2-linux-x64/blender --background --python obj_preprocess.py
+# <path_to_blender> --background --python obj_preprocess.py
 import os 
 import math
 import bpy
@@ -9,8 +9,9 @@ PRE_ROTATION_BY_CATEGORY = {
     # 'standing_sink': math.pi/2,
     # future objects
     # 'desk": -math.pi/2,
-    # 'bookshelf': (3*math.pi)/2,
-    'chair': math.pi/2,
+    'bookshelf': (3*math.pi)/2,
+    # 'chair': math.pi/2,
+    # 'cell_shelf': -math.pi/2,
 }
 def clear_scene():
     bpy.ops.wm.read_factory_settings(use_empty=True)
@@ -28,9 +29,10 @@ def import_glb(glb_path):
 def export_glb(glb_path):
     bpy.ops.export_scene.gltf(filepath=glb_path, export_format='GLB')
 
-
-obj_folder="/root/autodl-tmp/zyh/retriever/obj"
-output_folder="/root/autodl-tmp/zyh/retriever/obj_preprocess"
+# your retrieved dataset folder
+obj_folder="./obj"
+# your rotated output folder, you can view your rotation logic, and then move it to your dataset folder and then use build_glb_index.py to build your new glb index
+output_folder="./obj_preprocess"
 for category in os.listdir(obj_folder):
     if category in PRE_ROTATION_BY_CATEGORY:
         rotation = PRE_ROTATION_BY_CATEGORY[category]

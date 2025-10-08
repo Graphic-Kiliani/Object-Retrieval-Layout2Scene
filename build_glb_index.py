@@ -1,9 +1,9 @@
 """
 # Processing the whole root dir
-python build_glb_index.py --input-path /root/autodl-tmp/zyh/retriever/obj
+python build_glb_index.py --input-path ./obj --output-file ./glb_index.json
 
 # Processing Single Category
-python build_glb_index.py --input-path /root/autodl-tmp/zyh/retriever/obj/oven
+python build_glb_index.py --input-path ./obj/kitchen_cabinet --output-file ./glb_index.json
 
 """
 
@@ -28,7 +28,7 @@ def parse_arguments():
     parser.add_argument('--input-path', type=str, default=None,
                         help='Input path: either a root folder with multiple categories, '
                              'or a single category folder containing .glb files. '
-                             'Default: /root/autodl-tmp/zyh/retriever/obj')
+                             'Default: ./obj')
     parser.add_argument('--output-file', type=str, default=None,
                         help='Output index file path. Default: /root/autodl-tmp/zyh/retriever/glb_index.json')
     
@@ -42,8 +42,8 @@ def main():
     args = parse_arguments()
     setup_gpu_device(args.gpu)
 
-    obj_folder = args.input_path if args.input_path else "/root/autodl-tmp/zyh/retriever/obj"
-    index_file = args.output_file if args.output_file else "/root/autodl-tmp/zyh/retriever/glb_index.json"
+    obj_folder = args.input_path if args.input_path else "./obj"
+    index_file = args.output_file if args.output_file else "./glb_index.json"
 
     print("=" * 60)
     print("GLB Index Builder")

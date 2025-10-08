@@ -1,18 +1,11 @@
 """
 <path_to_blender> --background --python main.py -- \
-    --input_json <path_to_room_json> \
+    --input_json assets/test.json \
     --out_dir    <output_dir_path> \
     --obj_folder <retrieval_assets_dir_path> \
     --glb_index  <glb_json_path> \
     --save_blend \
     --scene_id <num> \
-    --colorize  
-
-/root/autodl-tmp/zyh/Infinigen-Dataset-Toolkit/blender-4.5.2-linux-x64/blender --background --python main.py -- \
-    --input_json /root/autodl-tmp/zyh/retriever/test.json \
-    --out_dir    /root/autodl-tmp/zyh/retriever/colorful \
-    --obj_folder /root/autodl-tmp/zyh/retriever/obj \
-    --glb_index  /root/autodl-tmp/zyh/retriever/glb_index.json \
     --colorize  
 """
 

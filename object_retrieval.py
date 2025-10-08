@@ -199,11 +199,11 @@ def apply_object_transformations(obj, location, size, rotation, category=None):
         if use_anisotropic:
             
             
-            if cat_lower in ROTATION_CATEGORIES: # 如果json文件里该物体的angle是1.57或者-1.57
+            if cat_lower in ROTATION_CATEGORIES and (abs(rotation - 1.57) < 0.1 or abs(rotation + 1.57) < 0.1): # if angle in json is near 1.57 or -1.57
                 sx = target_size_y / max(rotated_size.y, eps)
                 sy = target_size_x / max(rotated_size.x, eps)
                 sz = target_size_z / max(rotated_size.z, eps)
-            else: # 如果angle是0或者3.14
+            else:  # if angle in json is near 0 or 3.14
                 sx = target_size_x / max(rotated_size.x, eps)
                 sy = target_size_y / max(rotated_size.y, eps)
                 sz = target_size_z / max(rotated_size.z, eps)
@@ -226,13 +226,26 @@ def apply_object_transformations(obj, location, size, rotation, category=None):
             print(f"    Uniform scale applied: {uniform_scale:.6f}  scale(before)={before_scale}")
             print(f"    Scale ratios: X={scale_ratio_x:.6f}, Y={scale_ratio_y:.6f}, Z={scale_ratio_z:.6f}")
 
+        # ---------- Step 5: Post-scaling rotation ----------
+        if cat_lower in ROTATION_CATEGORIES and (abs(rotation - 1.57) < 0.1 or abs(rotation + 1.57) < 0.1):
+            # Apply rotation using matrix multiplication (like obj_preprocess.py)
+            if abs(rotation) > 1e-8:
+                R = Matrix.Rotation(rotation, 4, 'Z')
+                obj.matrix_world = R @ obj.matrix_world
+                bpy.context.view_layer.update()
+                print(f"    Post-scaling rotation applied: {rotation:.3f} radians ({math.degrees(rotation):.1f} degrees)")
+                
+                # Recalculate bbox after rotation
+                current_min, current_max, current_size, current_center = compute_bbox([obj])
+                print(f"    Post-rotation bbox: size={current_size}, center={current_center}")
 
-        # ---------- Step 5: Scaled bbox ----------
+
+        # ---------- Step 6: Scaled bbox ----------
         current_min, current_max, current_size, current_center = compute_bbox([obj])
         print(f"    Scaled bbox: size={current_size}, center={current_center}")
 
 
-        # ---------- Step 6: Target center ----------
+        # ---------- Step 7: Target center ----------
         target_center = Vector((
             location[0] * SCENE_SCALE,  # x
             location[2] * SCENE_SCALE,  # z -> y
@@ -240,7 +253,7 @@ def apply_object_transformations(obj, location, size, rotation, category=None):
         ))
         print(f"    Target center: {target_center} (axis map [x,z,y])")
 
-        # ---------- Step 7: Move to center ----------
+        # ---------- Step 8: Move to center ----------
         move_distance = target_center - current_center
         before_loc = tuple(obj.location)
         obj.location = obj.location + move_distance
