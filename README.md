@@ -181,10 +181,10 @@ The first row displays the retrieved 3D scenes' renderings with pure color schem
  <p style="text-align: center; margin-top: 5px;">Object retrieval visualization</p>
 </div>
 
-### Layout vis
-We provide tools to visualize layout in image or gif form. Before that, you only need to convert your scene info json format into ours. (Check it in Test JSON link)
+### Layout/Scene vis
+We provide tools to visualize layout/Scene in image or gif form. Before that, you only need to convert your scene info json format into ours. (Check it in Test JSON link and parameters.json in the assets folder)
 
-See arguments'definition in visualization_mlayout.py
+See arguments'definition in visualization_mlayout.py/visualization_scene.py
 ```bash
 python visualization_mlayout.py <path_to_room_json> --scene_id <num> --label_small --small_thresh <num> --flipover --azimuth_offset <num>
 ```
