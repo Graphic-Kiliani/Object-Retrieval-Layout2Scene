@@ -32,9 +32,9 @@ tar -xzvf blender-4.5.3-linux-x64.tar.xz -C <path_to_target_dir>
 ```
 ## Dataset
 
-We use a curated dataset containing 3D objects categorized by type, designed to support layout-based retrieval tasks. Our retrieval dataset **includes 95 objects** which covers nearly all common indoor objects.
+We use a curated dataset containing 3D objects categorized by type, designed to support layout-based retrieval tasks. Our retrieval dataset **includes 95 types of objects** which covers nearly all common indoor objects.
 
-- **Dataset link:** [Download Here](https://pan.baidu.com/s/1Xxopue8EjIelQxhDkSoK6Q?pwd=p4cj)
+- **Dataset link:** [Download Here](https://drive.google.com/file/d/1iZG8gjzGdZihrx8-rRaVwcCR2TtUE1pW/view?usp=drive_link)
 
 <div align="center">
   <table>
