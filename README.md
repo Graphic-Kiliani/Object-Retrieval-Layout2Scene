@@ -1,6 +1,6 @@
 # Layout2Scene Object Retrieval
 
-This repository provides a simple and scalable pipeline for **layout-to-scene object retrieval**, focusing on matching 3D room layouts with relevant 3D objects and rendering them for visualization.
+This repository provides a simple and scalable pipeline for **layout-to-scene object retrieval**, focusing on matching 3D room layouts with relevant 3D objects and rendering them for visualization. This repo is part of our paper: [M3DLayout-A-Multi-Source-Dataset-of-3D-Indoor-Layouts-and-Structured-Descriptions.](https://graphic-kiliani.github.io/M3DLayout/) If you find our work helpful, please consider citing
 
 ## Method Overview
 
